@@ -1,0 +1,1 @@
+First end-to-end render test of the Content Machine pipeline (Zapier commit -> GitHub Actions render -> Buffer attach). 2026-07-19.
