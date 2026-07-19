@@ -1,0 +1,5 @@
+{
+  "slug": "tax-shakeup",
+  "card":  {"file": "card.html",  "width": 1080, "height": 1350},
+  "video": {"file": "video.html", "width": 1080, "height": 1920, "fps": 25, "duration": 24.0}
+}
