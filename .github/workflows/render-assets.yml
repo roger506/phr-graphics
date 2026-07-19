@@ -1,0 +1,68 @@
+name: Render assets
+
+on:
+  push:
+    paths:
+      - 'specs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-assets
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright pillow
+          python -m playwright install --with-deps chromium
+          sudo apt-get update -q
+          sudo apt-get install -y -q ffmpeg
+
+      - name: Ensure logo is valid
+        run: |
+          python - <<'EOF'
+          import pathlib, subprocess
+          from PIL import Image
+          p = pathlib.Path('assets/phr_logo.png')
+          ok = False
+          if p.exists():
+              try:
+                  Image.open(p).verify()
+                  ok = True
+              except Exception:
+                  pass
+          if not ok:
+              url = 'https://drive.google.com/uc?export=download&id=16rgeIRYbS60eXHdsUYafPA7goGdCOXlT'
+              subprocess.run(['curl', '-sL', url, '-o', str(p)], check=True)
+              Image.open(p).verify()
+              w = pathlib.Path('assets/phr_logo_white.png')
+              if w.exists():
+                  w.unlink()
+          EOF
+
+      - name: Render pending specs
+        run: python tools/render.py
+
+      - name: Commit rendered assets
+        run: |
+          git config user.name "phr-render-bot"
+          git config user.email "render@prestigeheritagerealty.com"
+          git add -A assets/
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+          else
+            git commit -m "Render assets [skip ci]"
+            git push
+          fi
