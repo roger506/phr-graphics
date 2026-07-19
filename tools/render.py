@@ -14,6 +14,18 @@ build.json format:
              "fps": 25, "duration": 24.0}
 }
 Either "card" or "video" may be omitted.
+
+ALSO supported (preferred for scheduled runs -- single Zapier task):
+a top-level single-file spec at specs/YYYY-MM-DD-slug.json with the HTML
+inlined, so one committed file carries the whole bundle:
+{
+  "slug": "tax-shakeup",
+  "card":  {"html": "<!DOCTYPE html>...", "width": 1080, "height": 1350},
+  "video": {"html": "<!DOCTYPE html>...", "width": 1080, "height": 1920,
+             "fps": 25, "duration": 24.0}
+}
+Inline HTML may reference ../../assets/* exactly like dir-style specs.
+Output basename = the json filename stem (e.g. 2026-07-20-tax-shakeup).
 """
 import json
 import shutil
@@ -88,6 +100,7 @@ def main() -> int:
     ASSETS.mkdir(exist_ok=True)
     ensure_white_logo()
     pending = []
+    tmp_dirs = []
     for build in sorted(SPECS.glob("*/build.json")):
         cfg = json.loads(build.read_text())
         slug = cfg["slug"]
@@ -104,22 +117,47 @@ def main() -> int:
                 jobs.append(("video", cfg["video"], out))
         if jobs:
             pending.append((build.parent, base, jobs))
+    # Single-file specs: specs/YYYY-MM-DD-slug.json with inline "html".
+    for spec_file in sorted(SPECS.glob("*.json")):
+        cfg = json.loads(spec_file.read_text())
+        base = spec_file.stem
+        jobs = []
+        tmp = SPECS / f".tmp-{base}"
+        for kind, ext in (("card", "png"), ("video", "mp4")):
+            section = cfg.get(kind)
+            if not section or "html" not in section:
+                continue
+            out = ASSETS / f"{base}.{ext}"
+            if out.exists():
+                continue
+            tmp.mkdir(exist_ok=True)
+            html_path = tmp / f"{kind}.html"
+            html_path.write_text(section["html"])
+            section = dict(section, file=f"{kind}.html")
+            jobs.append((kind, section, out))
+        if jobs:
+            tmp_dirs.append(tmp)
+            pending.append((tmp, base, jobs))
     if not pending:
         print("all specs already rendered")
         return 0
     if shutil.which("ffmpeg") is None:
         print("ffmpeg missing", file=sys.stderr)
         return 1
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page()
-        for spec_dir, base, jobs in pending:
-            for kind, cfg, out in jobs:
-                if kind == "card":
-                    render_card(page, spec_dir, base, cfg, out)
-                else:
-                    render_video(page, spec_dir, base, cfg, out)
-        browser.close()
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
+            for spec_dir, base, jobs in pending:
+                for kind, cfg, out in jobs:
+                    if kind == "card":
+                        render_card(page, spec_dir, base, cfg, out)
+                    else:
+                        render_video(page, spec_dir, base, cfg, out)
+            browser.close()
+    finally:
+        for tmp in tmp_dirs:
+            shutil.rmtree(tmp, ignore_errors=True)
     return 0
 
 
