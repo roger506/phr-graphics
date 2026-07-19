@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1080px; height:1920px; overflow:hidden; }
+  body {
+    background: radial-gradient(120% 80% at 25% 10%, #14335c 0%, #0b1f3a 55%, #081729 100%);
+    font-family: 'Inter','Helvetica Neue',Arial,sans-serif;
+    color:#fff;
+  }
+  .beat {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; text-align:center;
+    padding:0 90px; opacity:0;
+  }
+  .big { font-size:110px; font-weight:800; line-height:1.15; letter-spacing:-1px; }
+  .gold { color:#d9b544; }
+  .sub { font-size:64px; font-weight:600; color:#cfd9e6; margin-top:48px; }
+  .kicker { font-size:40px; font-weight:700; letter-spacing:10px; color:#d9b544; margin-bottom:52px; text-transform:uppercase;}
+  .bar { position:absolute; top:0; left:0; right:0; height:16px; background:linear-gradient(90deg,#a8841c,#d9b544,#a8841c);}
+  .logo img { height:200px; }
+  .tagline { font-family: Georgia,serif; font-style:italic; font-size:60px; color:#d9b544; margin-top:70px; }
+  .footer { font-size:34px; color:#e8edf3; margin-top:90px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="bar"></div>
+
+<div class="beat" id="b1">
+  <div class="kicker">Broward County</div>
+  <div class="big">Florida changed the math on <span class="gold">your tax bill.</span></div>
+</div>
+
+<div class="beat" id="b2">
+  <div class="big">New law.<br><span class="gold">SB 4F.</span></div>
+  <div class="sub">Signed June 24.</div>
+</div>
+
+<div class="beat" id="b3">
+  <div class="big">Cities now need a <span class="gold">two thirds vote</span> to raise your rate past rollback.</div>
+</div>
+
+<div class="beat" id="b4">
+  <div class="big">In November you vote on a homestead exemption that grows to <span class="gold">$250,000.</span></div>
+</div>
+
+<div class="beat" id="b5">
+  <div class="big">Your TRIM notice lands in August.</div>
+  <div class="sub">This year, <span class="gold" style="font-weight:800;">read it.</span></div>
+</div>
+
+<div class="beat" id="b6">
+  <div class="big">Buying or selling?<br><span class="gold">Let's talk first.</span></div>
+</div>
+
+<div class="beat" id="b7">
+  <div class="logo"><img src="../../assets/phr_logo_white.png"></div>
+  <div class="tagline">Straight answers. Deep roots.</div>
+  <div class="footer">Roger Averbuj, Broker<br>Prestige Heritage Realty<br>(954) 663-8461</div>
+</div>
+
+<script>
+// beats: [id, start, end]
+const BEATS = [
+  ['b1', 0.0, 2.2],
+  ['b2', 2.2, 5.6],
+  ['b3', 5.6, 10.6],
+  ['b4', 10.6, 15.6],
+  ['b5', 15.6, 19.6],
+  ['b6', 19.6, 21.6],
+  ['b7', 21.6, 24.0],
+];
+const IN = 0.22, OUT = 0.18;
+function ease(x){ return 1 - Math.pow(1-x, 3); }
+window.seek = function(t){
+  for (const [id, s, e] of BEATS){
+    const el = document.getElementById(id);
+    let op = 0, ty = 40, sc = 0.96;
+    if (t >= s && t < e){
+      const tin = Math.min(1, (t - s)/IN);
+      const tout = Math.min(1, (e - t)/OUT);
+      const k = ease(tin);
+      op = Math.min(k, tout);
+      ty = 40*(1-k);
+      sc = 0.96 + 0.04*k;
+    }
+    el.style.opacity = op;
+    el.style.transform = `translateY(${ty}px) scale(${sc})`;
+  }
+};
+window.seek(0);
+</script>
+</body>
+</html>
