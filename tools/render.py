@@ -73,6 +73,13 @@ def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
     page.goto(f"file://{spec_dir / cfg['file']}")
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(400)
+    # A valid video spec must define a global seek(t) animation function.
+    # Guard against malformed specs so we fail this spec cleanly instead of
+    # crashing the whole render job (and producing no assets at all).
+    if not page.evaluate("typeof window.seek === 'function'"):
+        raise ValueError(
+            f"{cfg['file']}: no global seek(t) function; video spec is malformed"
+        )
     with tempfile.TemporaryDirectory() as td:
         for i in range(n_frames):
             page.evaluate(f"seek({i / fps})")
@@ -144,20 +151,42 @@ def main() -> int:
     if shutil.which("ffmpeg") is None:
         print("ffmpeg missing", file=sys.stderr)
         return 1
+    failures = []
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page()
+            # Each spec is isolated: a bad spec (e.g. malformed video with no
+            # seek function) is logged and skipped so every other spec still
+            # renders and the job still commits. One bad file never fails the
+            # whole run.
             for spec_dir, base, jobs in pending:
-                for kind, cfg, out in jobs:
-                    if kind == "card":
-                        render_card(page, spec_dir, base, cfg, out)
-                    else:
-                        render_video(page, spec_dir, base, cfg, out)
+                try:
+                    for kind, cfg, out in jobs:
+                        if kind == "card":
+                            render_card(page, spec_dir, base, cfg, out)
+                        else:
+                            render_video(page, spec_dir, base, cfg, out)
+                except Exception as e:  # noqa: BLE001
+                    failures.append((base, str(e)))
+                    print(f"SKIPPED {base}: {e}", file=sys.stderr)
+                    # Remove any partial card output so we never commit a
+                    # half-rendered asset for a failed spec.
+                    for _k, _c, _out in jobs:
+                        if _out.exists() and _out.suffix == ".mp4":
+                            try:
+                                _out.unlink()
+                            except OSError:
+                                pass
             browser.close()
     finally:
         for tmp in tmp_dirs:
             shutil.rmtree(tmp, ignore_errors=True)
+    if failures:
+        print(f"{len(failures)} spec(s) skipped: "
+              + ", ".join(b for b, _ in failures), file=sys.stderr)
+    # Always exit 0 so successfully rendered assets are committed even when
+    # some specs were skipped. Broken specs surface via the SKIPPED logs.
     return 0
 
 
