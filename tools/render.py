@@ -109,7 +109,17 @@ def main() -> int:
     pending = []
     tmp_dirs = []
     for build in sorted(SPECS.glob("*/build.json")):
-        cfg = json.loads(build.read_text())
+        try:
+            cfg = json.loads(build.read_text())
+            if not isinstance(cfg, dict):
+                raise ValueError("spec is not a JSON object")
+        except (json.JSONDecodeError, ValueError, OSError) as e:
+            # A placeholder or malformed spec (e.g. a two-step commit where the
+            # first commit writes a stub) must never fail the whole job. Skip it;
+            # the real content arrives in a later commit and renders then.
+            print(f"SKIPPED {build.parent.name}: unreadable spec ({e})",
+                  file=sys.stderr)
+            continue
         slug = cfg["slug"]
         dirname = build.parent.name
         base = dirname if dirname.endswith(slug) else f"{dirname}-{slug}"
@@ -126,7 +136,17 @@ def main() -> int:
             pending.append((build.parent, base, jobs))
     # Single-file specs: specs/YYYY-MM-DD-slug.json with inline "html".
     for spec_file in sorted(SPECS.glob("*.json")):
-        cfg = json.loads(spec_file.read_text())
+        try:
+            cfg = json.loads(spec_file.read_text())
+            if not isinstance(cfg, dict):
+                raise ValueError("spec is not a JSON object")
+        except (json.JSONDecodeError, ValueError, OSError) as e:
+            # Placeholder / malformed spec (e.g. the first of a two-step commit
+            # that writes a stub like "PLACEHOLDER_WILL_REPLACE"). Skip cleanly
+            # so the job still exits 0; the real spec renders on the next commit.
+            print(f"SKIPPED {spec_file.name}: unreadable spec ({e})",
+                  file=sys.stderr)
+            continue
         base = spec_file.stem
         jobs = []
         tmp = SPECS / f".tmp-{base}"
