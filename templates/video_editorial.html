@@ -15,13 +15,15 @@
   #clab{font-size:38px;line-height:1.3;color:var(--text,#3c3a35);max-width:430px;opacity:0}
   #second{font-size:46px;line-height:1.38;margin-top:52px;color:var(--muted,#3c3a35);opacity:0;max-width:880px}
   #take{font-size:62px;font-weight:700;margin-top:70px;opacity:0;line-height:1.1}
-  #foot{font-family:"Liberation Sans",Arial,sans-serif;font-size:27px;color:var(--muted,#6d6a63);margin-top:64px;opacity:0}
+  #logo{height:150px;object-fit:contain;align-self:flex-start;margin-top:52px;opacity:0}
+  #foot{font-family:"Liberation Sans",Arial,sans-serif;font-size:27px;color:var(--muted,#6d6a63);margin-top:32px;opacity:0}
 </style></head><body>
   <div id="kick"></div>
   <div id="head"></div>
   <div id="counter"><div id="big">0</div><div id="clab"></div></div>
   <div id="second"></div>
   <div id="take"></div>
+  <img id="logo">
   <div id="foot"></div>
 <script>
 /*__DATA_SLOT__*/
@@ -45,6 +47,7 @@ id("clab").textContent=st0.label||st0.short||"";
 id("second").textContent=D.video_second||D.deck||"";
 id("take").textContent=D.takeaway||"";
 id("foot").textContent=D.attribution||"";
+id("logo").src=P.logo||"../../assets/phr_logo.png";
 function parseNum(str){var m=String(str).match(/^([^\d]*)([\d,]+)([^\d]*)$/);
   return m?{pre:m[1],val:parseInt(m[2].replace(/,/g,""),10),suf:m[3]}:{pre:"",val:0,suf:String(str)};}
 function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");}
@@ -65,7 +68,8 @@ window.seek=function(t){T=t;
   id("clab").style.opacity=eo(cl((T-2.4)/0.7,0,1));
   rev(id("second"),4.0,0.7);
   rev(id("take"),4.9,0.7,26);
-  id("foot").style.opacity=eo(cl((T-5.5)/0.7,0,1));};
+  rev(id("logo"),5.4,0.7,20);
+  id("foot").style.opacity=eo(cl((T-5.9)/0.7,0,1));};
 seek(0);
 </script>
 </body></html>
