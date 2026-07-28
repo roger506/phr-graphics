@@ -43,6 +43,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SPECS = ROOT / "specs"
 ASSETS = ROOT / "assets"
 TEMPLATES = ROOT / "templates"
+FONTS = ASSETS / "fonts"
 
 # design -> card template, video family template, and the video palette.
 # The card templates carry their own fixed palette; only the two shared video
@@ -90,6 +91,34 @@ def inject_data(html: str, data: dict) -> str:
     return html.replace("/*__DATA_SLOT__*/", "window.DATA = " + json.dumps(data) + ";")
 
 
+def fonts_css() -> str:
+    """@font-face block loading the repo-bundled fonts, so cards/videos render
+    identically on any machine (GitHub's runner need not have these installed)."""
+    def u(name):
+        return f"file://{FONTS / name}"
+    faces = [
+        ("Lora", "Lora-Variable.ttf", "100 900", "normal"),
+        ("Lora", "Lora-Italic-Variable.ttf", "100 900", "italic"),
+        ("GFS Baskerville", "GFSBaskerville.otf", "400", "normal"),
+        ("Caladea", "Caladea-Regular.ttf", "400", "normal"),
+        ("Caladea", "Caladea-Bold.ttf", "700", "normal"),
+        ("Caladea", "Caladea-Italic.ttf", "400", "italic"),
+        ("DejaVu Sans Mono", "DejaVuSansMono.ttf", "400", "normal"),
+        ("DejaVu Sans Mono", "DejaVuSansMono-Bold.ttf", "700", "normal"),
+    ]
+    return "\n".join(
+        f"@font-face{{font-family:'{fam}';src:url('{u(f)}');"
+        f"font-weight:{w};font-style:{s};font-display:block}}"
+        for fam, f, w, s in faces
+    )
+
+
+def inject_fonts(html: str) -> str:
+    # Insert the @font-face block at the top of the first <style> so template
+    # CSS resolves to the bundled fonts before falling back to system fonts.
+    return html.replace("<style>", "<style>\n" + fonts_css() + "\n", 1)
+
+
 def expand_design_spec(cfg: dict) -> dict:
     """Turn a {design, ...content} spec into an inline card/video spec by
     filling the design's templates. Raises on unknown design / missing template."""
@@ -100,14 +129,14 @@ def expand_design_spec(cfg: dict) -> dict:
     content = {k: v for k, v in cfg.items() if k not in CONTROL_KEYS}
     out = {"slug": cfg.get("slug", "post")}
 
-    chtml = inject_data(inject_logos((TEMPLATES / dc["card"]).read_text()), content)
+    chtml = inject_fonts(inject_data(inject_logos((TEMPLATES / dc["card"]).read_text()), content))
     out["card"] = {"html": chtml, "width": 1080, "height": 1350}
 
     pal = dict(dc["palette"])
     pal["logo"] = logo_url(pal.get("logo", "white"))
     vdata = dict(content)
     vdata["palette"] = pal
-    vhtml = inject_data(inject_logos((TEMPLATES / dc["video"]).read_text()), vdata)
+    vhtml = inject_fonts(inject_data(inject_logos((TEMPLATES / dc["video"]).read_text()), vdata))
     vconf = cfg.get("video") if isinstance(cfg.get("video"), dict) else {}
     out["video"] = {"html": vhtml, "width": 1080, "height": 1920,
                     "fps": vconf.get("fps", 25), "duration": vconf.get("duration", 7.6)}
