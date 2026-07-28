@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1350px;overflow:hidden}
+  body{background:#f4efe6;font-family:"Lora","GFS Baskerville",Georgia,serif;color:#20201d;
+    padding:96px 96px 72px;display:flex;flex-direction:column}
+  .top{display:flex;justify-content:space-between;align-items:center;
+    border-bottom:2px solid #20201d;padding-bottom:22px}
+  .kicker{font-family:"Liberation Sans",Arial,sans-serif;font-size:22px;letter-spacing:6px;
+    font-weight:700;text-transform:uppercase;color:#7c2b2b}
+  .issue{font-family:"Liberation Sans",Arial,sans-serif;font-size:18px;letter-spacing:2px;
+    color:#6d6a63;text-transform:uppercase}
+  h1{font-size:112px;line-height:1.0;font-weight:700;margin-top:56px;letter-spacing:-1.5px}
+  h1 .acc{color:#7c2b2b;font-style:italic}
+  .deck{font-size:40px;line-height:1.4;color:#3c3a35;margin-top:40px;max-width:840px;font-style:italic}
+  .pull{border-left:5px solid #7c2b2b;padding:6px 0 6px 34px;margin-top:52px}
+  .pull .big{font-size:56px;font-weight:700;line-height:1.12}
+  .pull .big b{color:#7c2b2b}
+  .spacer{flex:1}
+  .foot{border-top:2px solid #20201d;padding-top:24px;display:flex;justify-content:space-between;align-items:center}
+  .foot .name{font-size:26px;font-weight:700}
+  .foot .name span{display:block;font-family:"Liberation Sans",Arial,sans-serif;font-size:19px;
+    font-weight:400;color:#6d6a63;letter-spacing:.3px;margin-top:4px}
+  .foot img{height:88px;object-fit:contain}
+</style></head><body>
+  <div class="top"><div class="kicker" id="kick"></div><div class="issue" id="meta"></div></div>
+  <h1 id="h1"></h1>
+  <div class="deck" id="deck"></div>
+  <div class="pull"><div class="big" id="pull"></div></div>
+  <div class="spacer"></div>
+  <div class="foot"><div class="name" id="name"></div><img src="__LOGO_DARK__"></div>
+<script>
+/*__DATA_SLOT__*/
+const SAMPLE={kicker:"The Insurance Paradox",meta:"Broward · July 2026",
+  headline:"Rates fell.\nYour bill\n[[went up.]]",
+  deck:"Both are true — and the gap between the headline and your renewal notice is where buyers get burned.",
+  pullquote:"Citizens cuts averaged <b>14%</b> for 27,000 Broward homes. Half of Florida still watched premiums <b>rise</b>.",
+  attribution:"Roger Averbuj, Broker  |  Prestige Heritage Realty · (954) 663-8461"};
+const D=window.DATA||SAMPLE;
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function hl(s){return esc(s).replace(/\n/g,"<br>").replace(/\[\[(.+?)\]\]/g,'<span class="acc">$1</span>');}
+function rich(s){return esc(s).replace(/&lt;b&gt;/g,"<b>").replace(/&lt;\/b&gt;/g,"</b>");}
+function id(x){return document.getElementById(x);}
+id("kick").textContent=D.kicker||"";
+id("meta").textContent=D.meta||"";
+id("h1").innerHTML=hl(D.headline||"");
+id("deck").textContent=D.deck||"";
+id("pull").innerHTML=rich(D.pullquote||D.deck||"");
+var a=(D.attribution||"").split("|");
+id("name").innerHTML=esc((a[0]||"").trim())+"<span>"+esc(a.slice(1).join("·").replace(/·+/g,"·").trim())+"</span>";
+</script>
+</body></html>

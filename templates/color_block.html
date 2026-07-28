@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1350px;overflow:hidden}
+  body{font-family:"Liberation Sans",Arial,sans-serif;color:#17201c;background:#f3ece0;
+    display:flex;flex-direction:column}
+  .band{background:#0e4f4a;color:#fff;padding:70px 80px 60px;position:relative}
+  .band::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:#c9a24b}
+  .krow{display:flex;justify-content:space-between;align-items:center;margin-bottom:34px}
+  .k{font-size:22px;letter-spacing:6px;font-weight:700;text-transform:uppercase;color:#9fe3d3}
+  .logo{height:80px;object-fit:contain}
+  h1{font-size:112px;line-height:.98;font-weight:800;letter-spacing:-2px}
+  h1 .acc{color:#e7cf93}
+  .lower{flex:1;padding:56px 80px 64px;display:flex;flex-direction:column}
+  .deck{font-size:38px;line-height:1.36;color:#2b3531;max-width:900px}
+  .deck b{color:#0e4f4a}
+  .take{margin-top:40px;padding-left:24px;border-left:5px solid #c9a24b;
+    font-size:42px;font-weight:800;color:#0e4f4a;line-height:1.14}
+  .take span{display:block;font-size:19px;letter-spacing:4px;text-transform:uppercase;
+    color:#b07d1a;font-weight:700;margin-bottom:8px}
+  .stats{display:flex;gap:26px;margin-top:auto}
+  .stat{flex:1;background:#fff;border-radius:14px;padding:30px 30px 28px;box-shadow:0 8px 26px rgba(14,79,74,.12)}
+  .stat .n{font-size:74px;font-weight:800;color:#0e4f4a;line-height:1}
+  .stat .l{font-size:22px;color:#4a544f;margin-top:12px;line-height:1.3}
+  .foot{margin-top:34px;font-size:23px;color:#4a544f;letter-spacing:.3px}
+  .foot b{color:#17201c}
+</style></head><body>
+  <div class="band">
+    <div class="krow"><div class="k" id="kick"></div><img class="logo" src="__LOGO_WHITE__"></div>
+    <h1 id="h1"></h1>
+  </div>
+  <div class="lower">
+    <div class="deck" id="deck"></div>
+    <div class="take"><span id="takelab">The move</span><div id="take"></div></div>
+    <div class="stats" id="stats"></div>
+    <div class="foot" id="foot"></div>
+  </div>
+<script>
+/*__DATA_SLOT__*/
+const SAMPLE={kicker:"Broward County · Insurance",headline:"Rates fell.\nYour bill [[went up.]]",
+  deck:"Both headlines are true. The cuts are concentrated in <b>Citizens</b> policies and land at renewal — while private premiums keep tracking rebuilding costs.",
+  takeaway:"Underwrite the house, not the headline.",
+  stats:[{n:"14%",label:"avg Citizens cut · ~27,000 Broward homes"},
+         {n:"50%",label:"of FL homeowners saw premiums rise"},
+         {n:"$8,300",label:"avg FL premium · Insurify Jul 2026"}],
+  attribution:"<b>Roger Averbuj</b>, Broker  |  Prestige Heritage Realty  |  (954) 663-8461"};
+const D=window.DATA||SAMPLE;
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function hl(s){return esc(s).replace(/\n/g,"<br>").replace(/\[\[(.+?)\]\]/g,'<span class="acc">$1</span>');}
+function rich(s){return esc(s).replace(/&lt;b&gt;/g,"<b>").replace(/&lt;\/b&gt;/g,"</b>");}
+function id(x){return document.getElementById(x);}
+id("kick").textContent=D.kicker||"";
+id("h1").innerHTML=hl(D.headline||"");
+id("deck").innerHTML=rich(D.deck||"");
+id("take").textContent=D.takeaway||"";
+id("foot").innerHTML=rich(D.attribution||"");
+id("stats").innerHTML=(D.stats||[]).slice(0,3).map(function(s){
+  return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+rich(s.label)+'</div></div>';}).join("");
+</script>
+</body></html>

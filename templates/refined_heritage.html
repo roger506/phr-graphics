@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1350px;overflow:hidden}
+  body{background:radial-gradient(120% 80% at 50% 0%, #16324f 0%, #0d1f33 55%, #0a1826 100%);
+    font-family:"Caladea","Liberation Serif",Georgia,serif;color:#f5f1e8;
+    padding:78px 92px 66px;display:flex;flex-direction:column}
+  .frame{position:absolute;inset:34px;border:1.5px solid rgba(201,162,75,.55);pointer-events:none}
+  .corner{position:absolute;width:26px;height:26px;border:2px solid #c9a24b}
+  .tl{top:34px;left:34px;border-right:0;border-bottom:0}
+  .tr{top:34px;right:34px;border-left:0;border-bottom:0}
+  .bl{bottom:34px;left:34px;border-right:0;border-top:0}
+  .br{bottom:34px;right:34px;border-left:0;border-top:0}
+  .logo{height:118px;object-fit:contain;margin:2px auto 30px;display:block;opacity:.97}
+  .chip{align-self:center;border:1.3px solid #c9a24b;color:#e7cf93;border-radius:40px;
+    font-family:"Liberation Sans",Arial,sans-serif;font-size:20px;letter-spacing:5px;
+    font-weight:600;padding:11px 26px;text-transform:uppercase;margin-bottom:44px}
+  h1{font-size:104px;line-height:1.02;font-weight:700;text-align:center;letter-spacing:-1px}
+  h1 .acc{color:#d8b45a}
+  .sub{text-align:center;font-style:italic;font-size:44px;color:#cbb98f;margin-top:22px}
+  .rule{width:120px;height:2px;background:linear-gradient(90deg,transparent,#c9a24b,transparent);margin:46px auto}
+  .stats{display:flex;justify-content:center;gap:70px;margin-top:6px}
+  .stat{text-align:center}
+  .num{font-size:88px;font-weight:700;color:#fff;line-height:1}
+  .lab{font-family:"Liberation Sans",Arial,sans-serif;font-size:20px;letter-spacing:2.5px;
+    text-transform:uppercase;color:#c9a24b;margin-top:14px}
+  .lab span{display:block;color:#9fb0c4;letter-spacing:1px;font-size:17px;margin-top:4px;text-transform:none}
+  .spacer{flex:1}
+  .cta{text-align:center;font-style:italic;font-size:40px;color:#e7cf93;margin-bottom:26px}
+  .foot{text-align:center;font-family:"Liberation Sans",Arial,sans-serif;font-size:22px;
+    color:#93a4b8;letter-spacing:.3px}
+</style></head><body>
+  <div class="frame"></div><div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <img class="logo" src="__LOGO_WHITE__">
+  <div class="chip" id="chip"></div>
+  <h1 id="h1"></h1>
+  <div class="sub" id="sub"></div>
+  <div class="rule"></div>
+  <div class="stats" id="stats"></div>
+  <div class="spacer"></div>
+  <div class="cta" id="cta"></div>
+  <div class="foot" id="foot"></div>
+<script>
+/*__DATA_SLOT__*/
+const SAMPLE={kicker:"Broward County · Insurance",headline:"Rates fell.\nYour bill [[went up.]]",
+  sub:"Both are true.",cta:"Underwrite the house, not the headline.",
+  stats:[{n:"14%",label:"Avg Citizens cut",sub:"~27,000 Broward homes"},
+         {n:"$8,300",label:"Avg FL premium",sub:"Insurify, Jul 2026"}],
+  attribution:"Roger Averbuj, Broker  |  Prestige Heritage Realty  |  (954) 663-8461"};
+const D=window.DATA||SAMPLE;
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function hl(s){return esc(s).replace(/\n/g,"<br>").replace(/\[\[(.+?)\]\]/g,'<span class="acc">$1</span>');}
+function id(x){return document.getElementById(x);}
+id("chip").textContent=D.kicker||"";
+id("h1").innerHTML=hl(D.headline||"");
+id("sub").textContent=D.sub||D.deck||"";
+id("cta").textContent=D.cta||D.takeaway||"";
+id("foot").textContent=D.attribution||"";
+id("stats").innerHTML=(D.stats||[]).slice(0,2).map(function(s){
+  return '<div class="stat"><div class="num">'+esc(s.n)+'</div><div class="lab">'+esc(s.label)
+    +'<span>'+esc(s.sub||"")+'</span></div></div>';}).join("");
+</script>
+</body></html>

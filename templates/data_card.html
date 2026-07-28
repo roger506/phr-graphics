@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1350px;overflow:hidden}
+  body{background:#0f1417;font-family:"Liberation Sans",Arial,sans-serif;color:#eef2f4;
+    padding:80px 88px 64px;display:flex;flex-direction:column}
+  .head{display:flex;align-items:center;gap:18px;margin-bottom:20px}
+  .head .bar{width:46px;height:6px;background:#2ec4b6}
+  .head .k{font-size:21px;letter-spacing:5px;text-transform:uppercase;color:#2ec4b6;font-weight:700}
+  h1{font-family:"Lora",Georgia,serif;font-size:72px;line-height:1.04;font-weight:700;
+    letter-spacing:-.5px;margin-bottom:16px}
+  h1 .acc{color:#2ec4b6}
+  .grid{display:flex;flex-direction:column;justify-content:center;gap:8px;flex:1}
+  .row{display:flex;align-items:center;gap:40px;border-top:1px solid #26313a;padding:34px 0}
+  .row .n{font-family:"DejaVu Sans Mono",monospace;font-weight:700;font-size:92px;line-height:.9;
+    color:#fff;width:380px;flex:0 0 380px;letter-spacing:-3px}
+  .row .n.teal{color:#2ec4b6}
+  .row .t{font-size:31px;line-height:1.34;color:#b9c4cc}
+  .row .t b{color:#fff;font-weight:700}
+  .take{border-top:1px solid #26313a;padding-top:30px;margin-top:6px}
+  .take .lab{font-size:19px;letter-spacing:4px;text-transform:uppercase;color:#2ec4b6;font-weight:700;margin-bottom:10px}
+  .take .txt{font-family:"Lora",Georgia,serif;font-size:44px;font-weight:700;line-height:1.1}
+  .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:34px}
+  .foot .c{font-size:22px;color:#8a97a1;letter-spacing:.3px}
+  .foot .c b{color:#eef2f4}
+  .foot img{height:74px;object-fit:contain}
+  .src{font-size:16px;color:#5f6d77;margin-top:9px}
+</style></head><body>
+  <div class="head"><div class="bar"></div><div class="k" id="kick"></div></div>
+  <h1 id="h1"></h1>
+  <div class="grid" id="grid"></div>
+  <div class="take"><div class="lab" id="takelab">The takeaway</div><div class="txt" id="take"></div></div>
+  <div class="foot"><div><div class="c" id="foot"></div><div class="src" id="src"></div></div>
+    <img src="__LOGO_WHITE__"></div>
+<script>
+/*__DATA_SLOT__*/
+const SAMPLE={kicker:"Florida Insurance · By the numbers",
+  headline:"The rate cut is real.\nSo is your [[higher bill.]]",
+  takeaway:"Underwrite the house, not the headline.",
+  stats:[{n:"14%",label:"Average <b>Citizens rate cut</b> — but it reaches only ~27,000 Broward policies.",accent:true},
+         {n:"50%",label:"of Florida homeowners saw premiums <b>rise</b> in the last 12 months."},
+         {n:"$8,300",label:"average Florida premium today. Cuts land at renewal — costs don't wait."}],
+  sources:"Sources: OIR / Citizens; Insurify, July 2026",
+  attribution:"<b>Roger Averbuj</b>, Broker · Prestige Heritage Realty · (954) 663-8461"};
+const D=window.DATA||SAMPLE;
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function hl(s){return esc(s).replace(/\n/g,"<br>").replace(/\[\[(.+?)\]\]/g,'<span class="acc">$1</span>');}
+// stat labels allow inline <b> from source; unescape the bold tags after escaping.
+function rich(s){return esc(s).replace(/&lt;b&gt;/g,"<b>").replace(/&lt;\/b&gt;/g,"</b>");}
+function id(x){return document.getElementById(x);}
+id("kick").textContent=D.kicker||"";
+id("h1").innerHTML=hl(D.headline||"");
+id("take").textContent=D.takeaway||"";
+id("foot").innerHTML=rich(D.attribution||"");
+id("src").textContent=D.sources||"";
+id("grid").innerHTML=(D.stats||[]).slice(0,3).map(function(s){
+  return '<div class="row"><div class="n'+(s.accent?" teal":"")+'">'+esc(s.n)
+    +'</div><div class="t">'+rich(s.label)+'</div></div>';}).join("");
+if(!D.takeaway){id("takelab").style.display="none";id("take").style.display="none";}
+</script>
+</body></html>
