@@ -16,7 +16,8 @@
     text-transform:uppercase;color:var(--kick,#c9a24b);margin-top:14px}
   #take{font-style:italic;font-size:62px;color:var(--acc,#e7cf93);margin-top:70px;max-width:840px;line-height:1.18;opacity:0}
   #logo{height:156px;object-fit:contain;margin-top:60px;opacity:0}
-  #foot{font-family:"Liberation Sans",Arial,sans-serif;font-size:28px;color:var(--foot,#93a4b8);margin-top:40px;opacity:0}
+  #tag{font-family:"Caladea","Liberation Serif",Georgia,serif;font-style:italic;font-size:34px;color:var(--acc,#e7cf93);margin-top:24px;opacity:0}
+  #foot{font-family:"Liberation Sans",Arial,sans-serif;font-size:28px;color:var(--foot,#93a4b8);margin-top:22px;opacity:0}
 </style></head><body>
   <div id="kick"></div>
   <div id="head"></div>
@@ -24,6 +25,7 @@
   <div id="stats"></div>
   <div id="take"></div>
   <img id="logo">
+  <div id="tag"></div>
   <div id="foot"></div>
 <script>
 /*__DATA_SLOT__*/
@@ -47,6 +49,7 @@ id("sub").textContent=D.sub||"";
 id("take").innerHTML=hl(D.takeaway||"");
 id("foot").textContent=plain(D.attribution||"");
 id("logo").src=P.logo||"../../assets/phr_logo_white.png";
+id("tag").textContent=D.tagline||"Straight answers. Deep roots.";
 id("stats").innerHTML=(D.stats||[]).slice(0,3).map(function(s){
   return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+esc(s.short||"")+'</div></div>';}).join("");
 if(!D.sub)id("sub").style.display="none";
@@ -61,8 +64,9 @@ window.seek=function(t){T=t;
   rev(id("sub"),1.6,0.7);
   rev(id("stats"),2.6,0.8,30);
   rev(id("take"),4.0,0.9);
-  rev(id("logo"),5.2,0.7,20);
-  rev(id("foot"),5.6,0.7,20);};
+  rev(id("logo"),5.2,0.6,20);
+  rev(id("tag"),5.5,0.6,16);
+  rev(id("foot"),5.8,0.6,16);};
 seek(0);
 </script>
 </body></html>
