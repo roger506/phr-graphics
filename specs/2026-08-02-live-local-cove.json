@@ -1,0 +1,14 @@
+{
+  "slug": "2026-08-02-live-local-cove",
+  "design": "color_block",
+  "kicker": "Fort Lauderdale · Live Local Act",
+  "headline": "Construction just started.\nThe zoning review\n[[never happened]].",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "deck": "376 apartments broke ground at 1055 N. Federal Highway using a state law that skips standard local rezoning entirely. <b>That mechanism can now reach almost any parcel in the county.</b>",
+  "takeaway": "Know the law before it becomes your neighbor.",
+  "stats": [
+    {"n": "376", "label": "apartments approved without standard rezoning review"},
+    {"n": "206", "label": "units reserved as workforce housing under the law"},
+    {"n": "$74M", "label": "construction loan just closed by the developer"}
+  ]
+}
