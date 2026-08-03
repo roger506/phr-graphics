@@ -1,0 +1,27 @@
+{
+  "slug": "2026-08-03-condo-inspection-gap",
+  "design": "data_card",
+  "kicker": "Broward County · Condo Law",
+  "headline": "Florida checked every condo.\nBroward skipped [[23% of the paperwork]].",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Silence is not the same as safe.",
+  "sources": "OPPAGA report via WLRN, July 31, 2026",
+  "stats": [
+    {
+      "n": "54",
+      "label": "Buildings statewide flagged <b>unsafe or uninhabitable</b> since 2024.",
+      "short": "unsafe buildings"
+    },
+    {
+      "n": "23%",
+      "label": "Of Broward's building officials <b>never filed</b> their 2025 inspection data.",
+      "short": "no paperwork",
+      "accent": true
+    },
+    {
+      "n": "Dec 31",
+      "label": "Deadline for older condos to finish inspection and <b>reserve funding</b> study.",
+      "short": "deadline"
+    }
+  ]
+}
