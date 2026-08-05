@@ -1,0 +1,27 @@
+{
+  "slug": "fed-rate-risk",
+  "design": "data_card",
+  "kicker": "Broward County · Mortgage Rates",
+  "headline": "The Fed didn't cut.\nThree governors wanted\n[[to raise rates instead]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Waiting for relief just got riskier than buying.",
+  "sources": "Source: Federal Reserve, July 29, 2026",
+  "stats": [
+    {
+      "n": "5",
+      "label": "The Fed has paused <b>five times</b> in 2026 without a single rate cut.",
+      "short": "five pauses"
+    },
+    {
+      "n": "9-3",
+      "label": "Three governors voted against the pause and pushed for a <b>rate hike</b> instead.",
+      "short": "split vote",
+      "accent": true
+    },
+    {
+      "n": "Sept 16",
+      "label": "The next meeting could bring the <b>first hike</b> of this cycle, not a cut.",
+      "short": "next meeting"
+    }
+  ]
+}
