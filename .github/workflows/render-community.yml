@@ -1,99 +1,57 @@
-#!/usr/bin/env python3
-"""
-render_community.py - render community market-report assets on a GitHub runner.
+name: Render community assets
 
-WHY THIS RUNS HERE AND NOT ON ROGER'S MAC
-Buffer accepts media only as a public file URL and offers no upload endpoint.
-Nothing in the Cowork session can move local binary to a public host: Zapier's
-GitHub "Create or Update File" stores its content field verbatim rather than
-base64-decoding it, the browser file_upload tool is broken, Lofty's media
-library rejects video, and passing bytes as base64 through the conversation is
-prohibitively large. The content-machine pipeline solved this first: push a
-small TEXT spec, and let GitHub's own compute produce the binaries and commit
-them. The bytes are born here, so they never cross a text field.
+# Deliberately separate from render-assets.yml. That workflow triggers on
+# specs/** and its tools/render.py expects the content-machine spec shape; a
+# community spec would break it. Different trigger path, different script,
+# different outputs. Neither pipeline can affect the other.
 
-SINGLE SOURCE OF TRUTH
-This script does NOT contain the card design. It imports card_html() from
-community_publish.py, which is a verbatim copy of bin/publish.py re-pushed on
-every cycle. Section 4a of the operating manual exists because the approved card
-once lived in one script while the video kept its own copy, and the logo and
-phone number silently disappeared from the video for a week. Do not inline any
-markup here.
+on:
+  push:
+    paths: ['community-specs/**']
+  workflow_dispatch:
 
-INPUTS  community-specs/*.json   written by publish.py --spec-out
-OUTPUTS assets/<basename>.png, -vertical.mp4, -horizontal.mp4
-"""
-import base64, glob, json, os, subprocess, sys, urllib.request
+permissions:
+  contents: write
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
-sys.path.insert(0, HERE)
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    # Two 33 second cuts at 24fps is about 1600 screenshots. The content-machine
+    # clips are 7.6s and finish in ~2.5 min; these are roughly 4x longer, so give
+    # them real headroom rather than letting a slow runner kill a good render.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
 
-import community_publish as P  # the real card_html, vendored per cycle
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
 
-SPEC_DIR = os.path.join(ROOT, "community-specs")
-OUT_DIR = os.path.join(ROOT, "assets")
-LOGO_B64 = os.path.join(HERE, "phr_logo.b64")
+      - name: Install dependencies
+        run: |
+          pip install playwright pandas
+          python -m playwright install --with-deps chromium
+          sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
 
+      - name: Render pending community specs
+        run: python tools/render_community.py
 
-def data_uri_from_url(url, mime):
-    """Fetch a remote asset and inline it, matching publish.asset_uri()."""
-    if not url:
-        return None
-    try:
-        with urllib.request.urlopen(url, timeout=60) as r:
-            return "data:{};base64,".format(mime) + base64.b64encode(r.read()).decode()
-    except Exception as e:
-        print("  photo fetch FAILED ({}), falling back to gradient hero".format(e))
-        return None
+      - name: Commit rendered assets
+        run: |
+          git config user.name "phr-render-bot"
+          git config user.email "render@prestigeheritagerealty.com"
+          git add -A assets/ community-specs/
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+          else
+            git commit -m "Render community assets [skip ci]"
+            git push
+          fi
 
-
-def render(spec_path):
-    spec = json.load(open(spec_path))
-    d, pricing, recent = spec["d"], spec.get("P") or {}, spec.get("R") or []
-    base = spec["basename"]
-    print("rendering {}".format(base))
-
-    # Logo: prefer a committed base64 copy, which is known to carry true alpha.
-    # Zapier cannot push binary, so that file is committed as TEXT. If it is
-    # absent, fall back to fetching the CDN copy. The brokerage name also appears
-    # as on-screen text, so a missing logo degrades the design without breaking
-    # the Florida advertising requirement (section 6).
-    if os.path.exists(LOGO_B64):
-        d["logo"] = "data:image/png;base64," + open(LOGO_B64).read().strip()
-        print("  logo: committed base64")
-    else:
-        d["logo"] = data_uri_from_url(spec["d"].get("logo_url"), "image/png")
-        print("  logo: fetched from URL" if d["logo"] else "  logo: MISSING")
-    d["photo"] = data_uri_from_url(spec["d"].get("photo_url"), "image/jpeg")
-
-    os.makedirs(OUT_DIR, exist_ok=True)
-    still = os.path.join(OUT_DIR, base + ".png")
-    P.render_still(P.card_html(d, pricing, recent, 1080, 1350, "still"),
-                   still, 1080, 1350)
-    print("  {}.png".format(base))
-
-    for label, w, h, mode in (("vertical", 1080, 1920, "vertical"),
-                              ("horizontal", 1920, 1080, "wide")):
-        out = os.path.join(OUT_DIR, "{}-{}.mp4".format(base, label))
-        _, n = P.render_video(P.card_html(d, pricing, recent, w, h, mode), out, w, h)
-        print("  {}-{}.mp4  ({} frames, {:,} bytes)".format(
-            base, label, n, os.path.getsize(out)))
-
-    # Mark the spec done so a later push does not re-render it. Renders are
-    # expensive (about 800 frames per cut) and this workflow triggers on any
-    # change under community-specs/.
-    os.rename(spec_path, spec_path + ".done")
-
-
-def main():
-    specs = sorted(glob.glob(os.path.join(SPEC_DIR, "*.json")))
-    if not specs:
-        print("no pending specs")
-        return
-    for s in specs:
-        render(s)
-
-
-if __name__ == "__main__":
-    main()
+      # Surfaces the raw URLs in the run log so a failed Buffer fetch can be
+      # diagnosed without cloning the repo.
+      - name: Report asset URLs
+        run: |
+          for f in assets/*.png assets/*.mp4; do
+            [ -e "$f" ] || continue
+            echo "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/$f  ($(stat -c%s "$f") bytes)"
+          done
