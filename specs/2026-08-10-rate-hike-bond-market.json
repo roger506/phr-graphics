@@ -1,0 +1,14 @@
+{
+  "slug": "rate-hike-bond-market",
+  "design": "data_card",
+  "kicker": "Broward County · Mortgage Rates",
+  "headline": "Rates just hit\na one year high.\n[[The Fed didn't do it.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Blame the bond market, not the Fed.",
+  "sources": "Freddie Mac data via AP, Aug 6 2026",
+  "stats": [
+    {"n": "6.69%", "label": "The <b>30 year fixed</b> just hit its highest mark in over a year, the fifth straight weekly increase.", "short": "5 weeks up", "accent": true},
+    {"n": "4.65%", "label": "The <b>10 year Treasury yield</b> that prices mortgages sat at just 3.97% before war driven inflation fears pushed it higher.", "short": "yield spike"},
+    {"n": "6.01%", "label": "The <b>15 year fixed</b> actually eased this week, a sign this is a bond market story, not a broad rate hike.", "short": "15-yr eased"}
+  ]
+}
