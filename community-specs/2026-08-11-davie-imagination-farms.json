@@ -1,0 +1,90 @@
+{
+  "basename": "2026-08-11-imagination-farms-davie-market-update",
+  "generated": "2026-08-11",
+  "d": {
+    "as_of": "2026-08-11",
+    "closed_90d": 3,
+    "closed_12mo": 13,
+    "closed_prior_12mo": 15,
+    "median_price_90d": 1680000.0,
+    "median_price_12mo": 1680000.0,
+    "median_price_prior_12mo": 1600000.0,
+    "yoy_price_pct": 5.0,
+    "yoy_volume_pct": -13.3,
+    "median_ppsf_12mo": 466.1,
+    "median_dom_12mo": 26,
+    "median_cdom_12mo": 79,
+    "list_to_close_12mo": 0.94,
+    "high_sale_12mo": 2190000.0,
+    "low_sale_12mo": 1250000.0,
+    "active_listings": 5,
+    "pending_listings": 3,
+    "months_supply": 4.6,
+    "confidence_90d": "LOW",
+    "confidence_12mo": "OK",
+    "community": "Imagination Farms",
+    "city": "Davie",
+    "product_type": "Single-family",
+    "agent": "Roger Averbuj",
+    "brokerage": "Prestige Heritage Realty",
+    "site": "prestigeheritagerealty.com",
+    "phone": "(954) 663-8461",
+    "agent_title": "Real Estate Broker / Owner",
+    "page": "https://www.prestigeheritagerealty.com/imagination-farms-market-activity",
+    "blog_slug": "imagination-farms-davie-real-estate-market-update",
+    "blog_url": "https://www.prestigeheritagerealty.com/blog/imagination-farms-davie-real-estate-market-update",
+    "cta_url": "https://www.prestigeheritagerealty.com/blog/imagination-farms-davie-real-estate-market-update",
+    "built": "1998-2001",
+    "window_label": "last 12 months",
+    "as_of_long": "August 11, 2026",
+    "as_of_month": "August 2026",
+    "window_long": "the twelve months ending August 11, 2026",
+    "cadence": "Refreshed every 90 days",
+    "photo_url": "https://cdn.lofty.com/image/fs/370329365657151/website/6897/cmsbuild/w1200_2026811_09010041251448ad.jpeg",
+    "logo_url": "https://cdn.chime.me/image/fs/sitebuild/2019101/16/w1200_original_3034a7ab-1025-460f-a755-a4354ed15ab9.png"
+  },
+  "P": {
+    "n_closed": 13,
+    "n_below_ask": 12,
+    "median_reduction": 144500.0,
+    "active_ppsf": 549.7973364215402,
+    "n_active": 5
+  },
+  "R": [
+    {
+      "addr": "12995 SW 40th St",
+      "bd": 5,
+      "sf": "4,130",
+      "price": "$2,100,000",
+      "date": "Jul 31"
+    },
+    {
+      "addr": "3973 SW 140th Ave",
+      "bd": 4,
+      "sf": "n/a",
+      "price": "$1,350,000",
+      "date": "Jun 30"
+    },
+    {
+      "addr": "4377 SW 140th Avenue",
+      "bd": 4,
+      "sf": "3,352",
+      "price": "$1,680,000",
+      "date": "May 28"
+    },
+    {
+      "addr": "13211 SW 44th Street",
+      "bd": 5,
+      "sf": "4,130",
+      "price": "$1,925,000",
+      "date": "May 1"
+    },
+    {
+      "addr": "13372 SW 40th St",
+      "bd": 3,
+      "sf": "3,060",
+      "price": "$1,436,000",
+      "date": "Apr 14"
+    }
+  ]
+}
