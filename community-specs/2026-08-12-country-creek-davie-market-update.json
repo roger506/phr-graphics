@@ -1,0 +1,99 @@
+{
+  "basename": "2026-08-12-country-creek-davie-market-update",
+  "generated": "2026-08-12",
+  "d": {
+    "as_of": "2026-08-12",
+    "closed_90d": 1,
+    "closed_12mo": 8,
+    "closed_prior_12mo": 11,
+    "median_price_90d": 315000.0,
+    "median_price_12mo": 485000.0,
+    "median_price_prior_12mo": 499000.0,
+    "yoy_price_pct": -2.8,
+    "yoy_volume_pct": -27.3,
+    "median_ppsf_12mo": 367.2,
+    "median_dom_12mo": 28.5,
+    "median_cdom_12mo": 28.5,
+    "list_to_close_12mo": 0.97,
+    "high_sale_12mo": 610000.0,
+    "low_sale_12mo": 315000.0,
+    "active_listings": 3,
+    "pending_listings": 1,
+    "months_supply": 4.5,
+    "confidence_90d": "LOW",
+    "confidence_12mo": "LOW",
+    "community": "Country Creek",
+    "city": "Davie",
+    "product_type": "Single-family",
+    "agent": "Roger Averbuj",
+    "brokerage": "Prestige Heritage Realty",
+    "site": "prestigeheritagerealty.com",
+    "phone": "(954) 663-8461",
+    "agent_title": "Real Estate Broker / Owner",
+    "page": "https://www.prestigeheritagerealty.com/country-creek-market-activity",
+    "blog_slug": "country-creek-davie-real-estate-market-update",
+    "blog_url": "https://www.prestigeheritagerealty.com/blog/country-creek-davie-real-estate-market-update",
+    "cta_url": "https://www.prestigeheritagerealty.com/blog/country-creek-davie-real-estate-market-update",
+    "built": "1988-1994",
+    "window_label": "last 12 months",
+    "as_of_long": "August 12, 2026",
+    "as_of_month": "August 2026",
+    "window_long": "the twelve months ending August 12, 2026",
+    "cadence": "Refreshed every 90 days",
+    "photo_focus": "center 78%",
+    "photo_url": "https://cdn.lofty.com/image/fs/370329365657151/website/6897/cmsbuild/w1200_2026812_245dddcf9c084398.jpeg",
+    "logo_url": "https://cdn.chime.me/image/fs/sitebuild/2019101/16/w1200_original_3034a7ab-1025-460f-a755-a4354ed15ab9.png"
+  },
+  "P": {
+    "excluded_orig_price": [
+      {
+        "mls_id": "F10520170",
+        "orig_list": 569.0,
+        "sale_price": 513000.0,
+        "reason": "original list price implausible against sale price, excluded from the below-ask base"
+      }
+    ],
+    "n_closed": 7,
+    "n_below_ask": 7,
+    "median_reduction": 15000.0,
+    "active_ppsf": 375.38461538461536,
+    "n_active": 3
+  },
+  "R": [
+    {
+      "addr": "4250 SW 72nd Ter",
+      "bd": 2,
+      "sf": "955",
+      "price": "$315,000",
+      "date": "Jul 2"
+    },
+    {
+      "addr": "4444 SW 72nd Ter",
+      "bd": 3,
+      "sf": "1,297",
+      "price": "$470,000",
+      "date": "Apr 10"
+    },
+    {
+      "addr": "4190 SW 70th Ter",
+      "bd": 3,
+      "sf": "1,378",
+      "price": "$513,000",
+      "date": "Feb 10"
+    },
+    {
+      "addr": "4415 SW 72 Ter",
+      "bd": 3,
+      "sf": "1,344",
+      "price": "$385,000",
+      "date": "Feb 2"
+    },
+    {
+      "addr": "3950 SW 72nd Drive",
+      "bd": 3,
+      "sf": "1,625",
+      "price": "$610,000",
+      "date": "Dec 9"
+    }
+  ]
+}
