@@ -1,0 +1,14 @@
+{
+  "slug": "roof-age-insurance-clock-v2",
+  "design": "data_card",
+  "kicker": "Broward County · Insurance",
+  "headline": "Your insurer just moved\nthe roof clock from\n[[20 years to 15]].",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "A newer roof is now the fastest way to a better rate. An aging one is the fastest way to lose it.",
+  "sources": "WFLX · Security First Insurance, Aug 2026",
+  "stats": [
+    {"n": "15", "label": "Insurers now flag <b>asphalt and composition roofs</b> at 15 years, not 20.", "short": "15 years"},
+    {"n": "40", "label": "<b>Metal roofs</b> can still get favorable treatment from insurers up to 40 years.", "short": "metal roofs"},
+    {"n": "$9K", "label": "One homeowner's <b>annual premium</b>, stuck there by a roof turning 15 this month.", "short": "premium", "accent": true}
+  ]
+}
