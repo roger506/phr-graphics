@@ -1,0 +1,14 @@
+{
+  "slug": "roof-age-insurance-clock",
+  "design": "data_card",
+  "kicker": "Broward County · Insurance",
+  "headline": "Rates are falling.\nYour roof just moved\nthe [[finish line]].",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "The relief is real. Whether it reaches you depends on your roof, not the headline.",
+  "sources": "WFLX · Governor's Office · Security First Insurance, Aug 2026",
+  "stats": [
+    {"n": "15", "label": "Insurers now flag <b>asphalt and composition roofs</b> at 15 years, not 20.", "short": "15 years"},
+    {"n": "14.1%", "label": "Broward's average <b>Citizens rate cut</b> this year, the largest in the state.", "short": "rate cut"},
+    {"n": "$9K", "label": "One homeowner's <b>annual premium</b>, stuck there by a roof turning 15 this month.", "short": "premium", "accent": true}
+  ]
+}
