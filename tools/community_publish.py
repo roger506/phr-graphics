@@ -122,7 +122,7 @@ body{font-family:'Helvetica Neue',system-ui,-apple-system,sans-serif;color:#fff;
 .tn{font-variant-numeric:tabular-nums}
 #hero{position:absolute;top:0;left:0;right:0;height:100%;overflow:hidden}
 #hero img{position:absolute;top:50%;left:50%;width:118%;height:118%;
-  object-fit:cover;object-position:center 64%;transform:translate(-50%,-50%) scale(1)}
+  object-fit:cover;object-position:PHOTOFOCUS;transform:translate(-50%,-50%) scale(1)}
 #hero:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,
   rgba(8,10,13,.86) 0%,rgba(8,10,13,.68) 24%,rgba(8,10,13,.40) 44%,
   rgba(8,10,13,.12) 62%,rgba(14,16,19,.52) 88%,rgba(14,16,19,.99) 100%)}
@@ -183,6 +183,7 @@ td.d{color:#8a94a6;font-size:F22px}
 .flogo{height:F112px}"""
     css = css.replace("GRADCSS", grad_css).replace("WPX", str(w)).replace("HPX", str(h))
     css = css.replace("PADB", str(pad_b)).replace("PAD", str(pad))
+    css = css.replace("PHOTOFOCUS", d.get("photo_focus") or "center 64%")
     # F<n> tokens scale with the aspect. Done by token so the CSS above stays
     # readable and free of format-string collisions with % and {}.
     import re as _re
@@ -211,7 +212,7 @@ td.d{color:#8a94a6;font-size:F22px}
       <div class="d">{vol_move}</div></div>
     <div class="st" data-i="3"><div class="v tn" data-c="{dom}">0</div>
       <div class="k">Avg days on mkt</div>
-      <div class="d" style="color:#8a94a6">to contract</div></div>
+      <div class="d" style="color:#8a94a6">{dom_label}</div></div>
   </div>
   {table}
 </div>
@@ -238,7 +239,8 @@ td.d{color:#8a94a6;font-size:F22px}
         ppsf=int(round(ppsf or 0)), sold=int(d["closed_12mo"] or 0),
         vol_move=('<span class="{}">{}{}</span> yr/yr'.format(
             M["vol_cls"], M["vol_arrow"], M["vol_pct"]) if M["vol_pct"] else ""),
-        dom=int(round(d.get("median_dom_12mo") or 0)), table=table, insight=insight,
+        dom=int(round(d.get("median_dom_12mo") or 0)),
+        dom_label=d.get("dom_label", "to contract"), table=table, insight=insight,
         agent=d["agent"], title=cfg_title(d), phone=d["phone"], site=d["site"],
         logo=logo, clogo=clogo)
 
