@@ -1,0 +1,14 @@
+{
+    "slug": "2026-08-17-property-tax-ballot-rewrite-v2",
+    "design": "color_block",
+    "kicker": "Broward County · Property Tax",
+    "headline": "Your November ballot\njust got [[rewritten]]",
+    "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+    "deck": "A judge ruled the original ballot language misleading. Here is what you are <b>actually voting on</b> now.",
+    "takeaway": "Read the amendment, not the headline.",
+    "stats": [
+          {"n": "$150,000", "label": "exemption starts 2027"},
+          {"n": "$250,000", "label": "exemption by 2028"},
+          {"n": "60%", "label": "voter approval needed"}
+    ]
+}
