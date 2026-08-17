@@ -1,0 +1,14 @@
+{
+  "slug": "property-tax-ballot-rewrite",
+  "design": "color_block",
+  "kicker": "Broward County · Property Tax",
+  "headline": "A judge forced Florida\nto rewrite your\n[[November tax ballot]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "deck": "The state dropped the <b>full elimination</b> language. Here is what you are actually voting on this November.",
+  "takeaway": "Read the amendment, not the headline.",
+  "stats": [
+    {"n": "$150,000", "label": "homestead exemption starting 2027"},
+    {"n": "$250,000", "label": "homestead exemption by 2028"},
+    {"n": "60%", "label": "voter approval required to pass"}
+  ]
+}
