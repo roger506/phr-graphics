@@ -29,6 +29,21 @@ files). Inline/template HTML may reference the PHR logo; template specs use the
 tokens __LOGO_WHITE__ / __LOGO_DARK__ which are replaced with absolute paths.
 Every spec is rendered in isolation and the job always exits 0, so one broken
 or placeholder spec never fails the whole run.
+
+CARD OVERFLOW GUARD (added 2026-08-18): every card template is a fixed
+1080x1350 canvas with overflow:hidden and a flex spacer meant to push the
+stats/footer block to the bottom. If the headline (or other content above the
+spacer) renders taller than expected -- e.g. a manually-broken headline line
+that is too wide for the canvas at full size and wraps onto an extra line --
+the footer and its separator silently slide past the bottom edge and get
+clipped with no error, because page.screenshot() only captures the fixed
+viewport. render_card() now measures the footer's position after the initial
+render; if it overflows, it shrinks the headline font-size in small steps and
+re-measures until it fits (this also tends to un-wrap an overlong line). If it
+still doesn't fit at the shrink floor, the card is NOT committed: a diagnostic
+report is written to assets/_debug/<slug>.json (measured overflow, the exact
+headline text, and the shrink attempts) and the spec is skipped with a clear
+error, the same way a malformed video spec is skipped today.
 """
 import json
 import shutil
@@ -44,6 +59,7 @@ SPECS = ROOT / "specs"
 ASSETS = ROOT / "assets"
 TEMPLATES = ROOT / "templates"
 FONTS = ASSETS / "fonts"
+DEBUG = ASSETS / "_debug"
 
 # design -> card template, video family template, and the video palette.
 # The card templates carry their own fixed palette; only the two shared video
@@ -73,6 +89,11 @@ DESIGN_CONFIG = {
 }
 
 CONTROL_KEYS = {"design", "slug", "video", "card"}
+
+# Card overflow guard tuning: never shrink the headline below this fraction of
+# its authored size, and step down by this many px each attempt.
+H1_SHRINK_FLOOR_RATIO = 0.75
+H1_SHRINK_STEP_PX = 4
 
 
 def logo_url(kind: str) -> str:
@@ -158,13 +179,91 @@ def ensure_white_logo() -> None:
     print(f"derived {dst.name}")
 
 
+def _measure_footer(page):
+    """Return {foot_bottom, h1_font_size, h1_text} or None if the template has
+    no .foot / h1 (not all templates need the overflow guard)."""
+    return page.evaluate(
+        """() => {
+            const foot = document.querySelector('.foot');
+            const h1 = document.querySelector('h1');
+            if (!foot || !h1) return null;
+            return {
+                foot_bottom: foot.getBoundingClientRect().bottom,
+                h1_font_size: parseFloat(getComputedStyle(h1).fontSize),
+                h1_text: h1.innerText,
+            };
+        }"""
+    )
+
+
 def render_card(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
     page.set_viewport_size({"width": cfg["width"], "height": cfg["height"]})
     page.goto(f"file://{spec_dir / cfg['file']}")
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(600)
+
+    canvas_h = cfg["height"]
+    m = _measure_footer(page)
+    if m is None:
+        # Template has no .foot/h1 pair (shouldn't happen for card templates
+        # today, but don't block rendering over it).
+        page.screenshot(path=str(out))
+        print(f"rendered {out.name}")
+        return
+
+    original_font = m["h1_font_size"]
+    foot_bottom_original = m["foot_bottom"]
+    overflow = foot_bottom_original - canvas_h
+    current = original_font
+    floor = original_font * H1_SHRINK_FLOOR_RATIO
+    attempts = []
+
+    while overflow > 0 and current - H1_SHRINK_STEP_PX >= floor:
+        current -= H1_SHRINK_STEP_PX
+        page.evaluate(f"document.querySelector('h1').style.fontSize = '{current}px'")
+        page.wait_for_timeout(80)
+        m = _measure_footer(page)
+        overflow = m["foot_bottom"] - canvas_h
+        attempts.append({
+            "h1_font_size": round(current, 1),
+            "footer_bottom": round(m["foot_bottom"], 1),
+            "overflow_px": round(overflow, 1),
+        })
+
+    if overflow > 0:
+        # Auto-shrink couldn't fit it within the allowed range. Do NOT commit
+        # a clipped card. Write a diagnostic report with exact measurements so
+        # the offending text can be rewritten precisely, then fail loudly.
+        DEBUG.mkdir(parents=True, exist_ok=True)
+        report = {
+            "slug": name,
+            "canvas_height": canvas_h,
+            "footer_bottom_no_shrink": round(foot_bottom_original, 1),
+            "overflow_px_no_shrink": round(foot_bottom_original - canvas_h, 1),
+            "h1_font_size_original": round(original_font, 1),
+            "h1_font_size_at_floor": round(current, 1),
+            "footer_bottom_at_floor": round(m["foot_bottom"], 1),
+            "overflow_px_at_floor": round(overflow, 1),
+            "h1_text": m["h1_text"],
+            "shrink_attempts": attempts,
+            "note": ("Auto-shrink alone could not fit this card's content within the "
+                     "1350px canvas. Shorten the headline (or whichever field is tall) "
+                     "and recommit the spec under a new slug; see FUTURE.md / the "
+                     "Memory Ledger CONFIG UPDATE (2026-08-18) for the standing process."),
+        }
+        (DEBUG / f"{name}.json").write_text(json.dumps(report, indent=2))
+        raise ValueError(
+            f"card overflow unresolved: footer sits {overflow:.0f}px past the "
+            f"{canvas_h}px canvas even after shrinking the headline from "
+            f"{original_font:.0f}px to {current:.0f}px; diagnostic written to "
+            f"assets/_debug/{name}.json"
+        )
+
     page.screenshot(path=str(out))
-    print(f"rendered {out.name}")
+    if current != original_font:
+        print(f"rendered {out.name} (headline auto-shrunk {original_font:.0f}px -> {current:.0f}px to fit)")
+    else:
+        print(f"rendered {out.name}")
 
 
 def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
