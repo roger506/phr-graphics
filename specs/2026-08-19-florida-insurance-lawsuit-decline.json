@@ -1,0 +1,27 @@
+{
+  "slug": "florida-insurance-lawsuit-decline",
+  "design": "data_card",
+  "kicker": "Broward County . Insurance",
+  "headline": "Florida's insurance lawsuits\njust got cut\n[[nearly in half]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "The panic that stalled your closing is losing its grip.",
+  "sources": "Florida Realtors, Insurance Journal, Florida OIR . Aug 2026",
+  "stats": [
+    {
+      "n": "41%",
+      "label": "Florida's share of the nation's <b>insurance lawsuits</b> in 2025, down from 79% in 2020.",
+      "short": "lawsuit share",
+      "accent": true
+    },
+    {
+      "n": "20+",
+      "label": "new carriers have entered Florida since the <b>2022 and 2023</b> litigation reforms.",
+      "short": "new carriers"
+    },
+    {
+      "n": "8.8%",
+      "label": "average rate cut approved this year for <b>Citizens Property Insurance</b>, the state's insurer of last resort.",
+      "short": "Citizens cut"
+    }
+  ]
+}
