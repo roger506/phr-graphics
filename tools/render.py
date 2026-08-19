@@ -150,8 +150,8 @@ def fonts_css() -> str:
         ("DejaVu Sans Mono", "DejaVuSansMono-Bold.ttf", "700", "normal"),
     ]
     return "\n".join(
-        f"@font-face{{{{font-family:'{fam}';src:url('{u(f)}');"
-        f"font-weight:{w};font-style:{s};font-display:block}}}}"
+        f"@font-face{{font-family:'{fam}';src:url('{u(f)}');"
+        f"font-weight:{w};font-style:{s};font-display:block}}"
         for fam, f, w, s in faces
     )
 
