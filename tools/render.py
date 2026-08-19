@@ -4,18 +4,10 @@
 Three spec formats are supported (all under specs/):
 
 1. TEMPLATE / DATA spec  (preferred -- tiny file, one Zapier task):
-   specs/YYYY-MM-DD-slug.json carrying a "design" key and the day's words:
-   {
-     "slug": "insurance-paradox",
-     "design": "data_card",           # one of DESIGN_CONFIG below
-     "kicker": "Florida Insurance ...",
-     "headline": "The rate cut is real.\\nSo is your [[higher bill.]]",
-     "deck": "...", "takeaway": "...",
-     "stats": [{"n":"14%","label":"...","short":"cut","accent":true}, ...],
-     "sources": "...", "attribution": "Roger Averbuj, Broker | ..."
-   }
+   specs/YYYY-MM-DD-slug.json carrying a "design" key and the day's words.
    render.py loads templates/<design>.html + the design's video template,
-   injects the data, and renders card (1080x1350) + video (1080x1920).
+   injects the data, and renders card (1080x1350) + video (1080x1920) +
+   blog card (1600x900).
    Headline convention: "\\n" -> line break, "[[x]]" -> accent span.
 
 2. INLINE single-file spec:
@@ -30,34 +22,41 @@ tokens __LOGO_WHITE__ / __LOGO_DARK__ which are replaced with absolute paths.
 Every spec is rendered in isolation and the job always exits 0, so one broken
 or placeholder spec never fails the whole run.
 
-CARD OVERFLOW GUARD (added 2026-08-18): every card template is a fixed
-1080x1350 canvas with overflow:hidden and a flex spacer meant to push the
-stats/footer block to the bottom. If the headline (or other content above the
-spacer) renders taller than expected -- e.g. a manually-broken headline line
-that is too wide for the canvas at full size and wraps onto an extra line --
-the footer and its separator silently slide past the bottom edge and get
-clipped with no error, because page.screenshot() only captures the fixed
-viewport. render_card() now measures the footer's position after the initial
-render; if it overflows, it shrinks the headline font-size in small steps and
-re-measures until it fits (this also tends to un-wrap an overlong line). If it
-still doesn't fit at the shrink floor, the card is NOT committed: a diagnostic
-report is written to assets/_debug/<slug>.json (measured overflow, the exact
-headline text, and the shrink attempts) and the spec is skipped with a clear
-error, the same way a malformed video spec is skipped today.
+CARD OVERFLOW GUARD (added 2026-08-18): every card template is a fixed canvas
+with overflow:hidden. If the headline renders taller than expected the footer
+silently slides past the bottom edge and is clipped with no error, because
+page.screenshot() only captures the fixed viewport. render_card() measures the
+footer after the initial render; if it overflows it shrinks the h1 font-size in
+small steps and re-measures until it fits. If it still doesn't fit at the
+shrink floor the card is NOT committed: a diagnostic is written to
+assets/_debug/<slug>.json and the spec is skipped with a clear error.
 
 VIDEO LOOP (added 2026-08-19): both video templates finish revealing every
 element by roughly t=6.5s. The previous default rendered only 7.6s of clip, so
-the completed card (headline, stats, logo, tagline, compliance footer all on
-screen together) held for about one second before the file ended. That is too
-short to read, and short enough that feeds treated the clip as truncated and
-scrolled past it. Videos are now built from a CYCLE that ends with a real hold
-and is then repeated: "cycle" seconds of animation played "loops" times
-(defaults 10.5s x 2, about 21s total). Because the templates clamp their
-animation once the reveal finishes, a 10.5s cycle naturally holds the finished
-card still and readable for about 4s before restarting, with no template edit.
-Frames past the first cycle are hard-linked from the frames already captured
-rather than re-screenshotted, so the longer clip costs almost no extra render
-time. Any spec may override cycle / loops / duration / fps under "video".
+the completed card held for about one second before the file ended. That is too
+short to read, and short enough that feeds treated the clip as truncated.
+Videos are now built from a CYCLE that ends with a real hold and is then
+repeated: "cycle" seconds of animation played "loops" times (defaults 10.5s x 2,
+about 21s total). Because the templates clamp their animation once the reveal
+finishes, a 10.5s cycle naturally holds the finished card still and readable for
+about 4s before restarting, with no template edit. Frames past the first cycle
+are hard-linked from frames already captured, so the longer clip costs almost no
+extra render time. Any spec may override cycle / loops / duration / fps.
+
+BLOG CARD (added 2026-08-19): the 1080x1350 social card is portrait, which is
+correct for the Instagram and Facebook feed but wrong for the website. The blog
+theme drops the featured image into a box that is a FIXED 330px tall with fluid
+width, centre-cropped, so its aspect ratio swings from about 1.24:1 on a phone
+to about 2.75:1 on a wide desktop. A portrait card dropped in there shows only
+its middle ~29% and loses both the headline and the compliance footer. The theme
+also prints the post title and date over the BOTTOM of the image, so that strip
+is unusable. templates/blog_card.html is a 1600x900 (16:9) landscape card whose
+content sits inside a centred safe zone that survives every breakpoint, and
+which omits the headline because the theme already prints it. Output is
+assets/<basename>-blog.png, used as the Lofty featured image (and therefore also
+as og:image / twitter:image).
+It is deliberately NOT backfilled: the blog job is skipped whenever the day's
+main card PNG already exists, so pushing any new spec never re-renders history.
 """
 import json
 import os
@@ -77,8 +76,9 @@ FONTS = ASSETS / "fonts"
 DEBUG = ASSETS / "_debug"
 
 # design -> card template, video family template, and the video palette.
-# The card templates carry their own fixed palette; only the two shared video
-# templates are palette-driven (palette is injected into window.DATA.palette).
+# The card templates carry their own fixed palette; the shared video template
+# and the shared blog template are palette-driven (palette is injected into
+# window.DATA.palette).
 DESIGN_CONFIG = {
     "refined_heritage": {
         "card": "refined_heritage.html", "video": "video_kinetic.html",
@@ -103,7 +103,7 @@ DESIGN_CONFIG = {
                     "kick": "#9a8b6a", "muted": "#6b6558", "logo": "dark"}},
 }
 
-CONTROL_KEYS = {"design", "slug", "video", "card"}
+CONTROL_KEYS = {"design", "slug", "video", "card", "blog"}
 
 # Card overflow guard tuning: never shrink the headline below this fraction of
 # its authored size, and step down by this many px each attempt.
@@ -116,6 +116,16 @@ H1_SHRINK_STEP_PX = 4
 # middle, which keeps motion in the feed instead of a long frozen tail.
 VIDEO_CYCLE_SECONDS = 10.5
 VIDEO_LOOPS = 2
+
+# Blog card (see BLOG CARD in the module docstring). One shared landscape
+# template for every design; the design's palette is injected like the video.
+BLOG_TEMPLATE = "blog_card.html"
+BLOG_WIDTH = 1600
+BLOG_HEIGHT = 900
+
+# kind -> (output extension, output basename suffix)
+OUTPUT_KINDS = (("card", "png", ""), ("video", "mp4", ""), ("blog", "png", "-blog"))
+STILL_KINDS = ("card", "blog")
 
 
 def logo_url(kind: str) -> str:
@@ -162,8 +172,14 @@ def inject_fonts(html: str) -> str:
     return html.replace("<style>", "<style>\n" + fonts_css() + "\n", 1)
 
 
+def build(template_name: str, data: dict) -> str:
+    """Load a template, inject logos, data and fonts."""
+    raw = (TEMPLATES / template_name).read_text()
+    return inject_fonts(inject_data(inject_logos(raw), data))
+
+
 def expand_design_spec(cfg: dict) -> dict:
-    """Turn a {design, ...content} spec into an inline card/video spec by
+    """Turn a {design, ...content} spec into an inline card/video/blog spec by
     filling the design's templates. Raises on unknown design / missing template."""
     design = cfg["design"]
     dc = DESIGN_CONFIG.get(design)
@@ -172,20 +188,22 @@ def expand_design_spec(cfg: dict) -> dict:
     content = {k: v for k, v in cfg.items() if k not in CONTROL_KEYS}
     out = {"slug": cfg.get("slug", "post")}
 
-    chtml = inject_fonts(inject_data(inject_logos((TEMPLATES / dc["card"]).read_text()), content))
-    out["card"] = {"html": chtml, "width": 1080, "height": 1350}
+    out["card"] = {"html": build(dc["card"], content), "width": 1080, "height": 1350}
 
     pal = dict(dc["palette"])
     pal["logo"] = logo_url(pal.get("logo", "white"))
     vdata = dict(content)
     vdata["palette"] = pal
-    vhtml = inject_fonts(inject_data(inject_logos((TEMPLATES / dc["video"]).read_text()), vdata))
+
     vconf = cfg.get("video") if isinstance(cfg.get("video"), dict) else {}
     cycle = vconf.get("cycle", VIDEO_CYCLE_SECONDS)
     loops = vconf.get("loops", VIDEO_LOOPS)
-    out["video"] = {"html": vhtml, "width": 1080, "height": 1920,
+    out["video"] = {"html": build(dc["video"], vdata), "width": 1080, "height": 1920,
                     "fps": vconf.get("fps", 25), "cycle": cycle, "loops": loops,
                     "duration": vconf.get("duration", round(cycle * loops, 3))}
+
+    out["blog"] = {"html": build(BLOG_TEMPLATE, vdata),
+                   "width": BLOG_WIDTH, "height": BLOG_HEIGHT}
     return out
 
 
@@ -230,8 +248,6 @@ def render_card(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
     canvas_h = cfg["height"]
     m = _measure_footer(page)
     if m is None:
-        # Template has no .foot/h1 pair (shouldn't happen for card templates
-        # today, but don't block rendering over it).
         page.screenshot(path=str(out))
         print(f"rendered {out.name}")
         return
@@ -256,12 +272,10 @@ def render_card(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
         })
 
     if overflow > 0:
-        # Auto-shrink couldn't fit it within the allowed range. Do NOT commit
-        # a clipped card. Write a diagnostic report with exact measurements so
-        # the offending text can be rewritten precisely, then fail loudly.
         DEBUG.mkdir(parents=True, exist_ok=True)
         report = {
             "slug": name,
+            "output": out.name,
             "canvas_height": canvas_h,
             "footer_bottom_no_shrink": round(foot_bottom_original, 1),
             "overflow_px_no_shrink": round(foot_bottom_original - canvas_h, 1),
@@ -272,16 +286,16 @@ def render_card(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
             "h1_text": m["h1_text"],
             "shrink_attempts": attempts,
             "note": ("Auto-shrink alone could not fit this card's content within the "
-                     "1350px canvas. Shorten the headline (or whichever field is tall) "
+                     "canvas. Shorten the headline (or whichever field is tall) "
                      "and recommit the spec under a new slug; see FUTURE.md / the "
                      "Memory Ledger CONFIG UPDATE (2026-08-18) for the standing process."),
         }
-        (DEBUG / f"{name}.json").write_text(json.dumps(report, indent=2))
+        (DEBUG / f"{out.stem}.json").write_text(json.dumps(report, indent=2))
         raise ValueError(
             f"card overflow unresolved: footer sits {overflow:.0f}px past the "
             f"{canvas_h}px canvas even after shrinking the headline from "
             f"{original_font:.0f}px to {current:.0f}px; diagnostic written to "
-            f"assets/_debug/{name}.json"
+            f"assets/_debug/{out.stem}.json"
         )
 
     page.screenshot(path=str(out))
@@ -344,13 +358,19 @@ def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
 
 
 def collect_inline(cfg: dict, base: str, tmp: Path):
-    """Build a jobs list from an inline card/video spec, writing HTML to tmp."""
+    """Build a jobs list from an inline card/video/blog spec, writing HTML to tmp."""
     jobs = []
-    for kind, ext in (("card", "png"), ("video", "mp4")):
+    card_out = ASSETS / f"{base}.png"
+    for kind, ext, suffix in OUTPUT_KINDS:
         section = cfg.get(kind)
         if not section or "html" not in section:
             continue
-        out = ASSETS / f"{base}.{ext}"
+        # The blog card arrived on 2026-08-19, long after most specs were
+        # rendered. Only produce it alongside a fresh card render, so pushing a
+        # new spec never backfills a blog card onto every historical day.
+        if kind == "blog" and card_out.exists():
+            continue
+        out = ASSETS / f"{base}{suffix}.{ext}"
         if out.exists():
             continue
         tmp.mkdir(exist_ok=True)
@@ -371,16 +391,16 @@ def main() -> int:
     tmp_dirs = []
 
     # Dir-style specs: specs/<name>/build.json referencing sibling HTML files.
-    for build in sorted(SPECS.glob("*/build.json")):
+    for build_file in sorted(SPECS.glob("*/build.json")):
         try:
-            cfg = json.loads(build.read_text())
+            cfg = json.loads(build_file.read_text())
             if not isinstance(cfg, dict):
                 raise ValueError("spec is not a JSON object")
         except (json.JSONDecodeError, ValueError, OSError) as e:
-            print(f"SKIPPED {build.parent.name}: unreadable spec ({e})", file=sys.stderr)
+            print(f"SKIPPED {build_file.parent.name}: unreadable spec ({e})", file=sys.stderr)
             continue
         slug = cfg["slug"]
-        dirname = build.parent.name
+        dirname = build_file.parent.name
         base = dirname if dirname.endswith(slug) else f"{dirname}-{slug}"
         jobs = []
         if "card" in cfg:
@@ -392,7 +412,7 @@ def main() -> int:
             if not out.exists():
                 jobs.append(("video", cfg["video"], out))
         if jobs:
-            pending.append((build.parent, base, jobs))
+            pending.append((build_file.parent, base, jobs))
 
     # Single-file specs: template/data specs OR inline-HTML specs.
     for spec_file in sorted(SPECS.glob("*.json")):
@@ -405,7 +425,7 @@ def main() -> int:
             # that writes a stub like "PLACEHOLDER_WILL_REPLACE"). Skip cleanly.
             print(f"SKIPPED {spec_file.name}: unreadable spec ({e})", file=sys.stderr)
             continue
-        # Template/data spec -> expand into an inline card/video spec.
+        # Template/data spec -> expand into an inline card/video/blog spec.
         if "design" in cfg:
             try:
                 cfg = expand_design_spec(cfg)
@@ -436,7 +456,7 @@ def main() -> int:
             for spec_dir, base, jobs in pending:
                 try:
                     for kind, cfg, out in jobs:
-                        if kind == "card":
+                        if kind in STILL_KINDS:
                             render_card(page, spec_dir, base, cfg, out)
                         else:
                             render_video(page, spec_dir, base, cfg, out)
