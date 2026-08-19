@@ -44,8 +44,23 @@ still doesn't fit at the shrink floor, the card is NOT committed: a diagnostic
 report is written to assets/_debug/<slug>.json (measured overflow, the exact
 headline text, and the shrink attempts) and the spec is skipped with a clear
 error, the same way a malformed video spec is skipped today.
+
+VIDEO LOOP (added 2026-08-19): both video templates finish revealing every
+element by roughly t=6.5s. The previous default rendered only 7.6s of clip, so
+the completed card (headline, stats, logo, tagline, compliance footer all on
+screen together) held for about one second before the file ended. That is too
+short to read, and short enough that feeds treated the clip as truncated and
+scrolled past it. Videos are now built from a CYCLE that ends with a real hold
+and is then repeated: "cycle" seconds of animation played "loops" times
+(defaults 10.5s x 2, about 21s total). Because the templates clamp their
+animation once the reveal finishes, a 10.5s cycle naturally holds the finished
+card still and readable for about 4s before restarting, with no template edit.
+Frames past the first cycle are hard-linked from the frames already captured
+rather than re-screenshotted, so the longer clip costs almost no extra render
+time. Any spec may override cycle / loops / duration / fps under "video".
 """
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -95,6 +110,13 @@ CONTROL_KEYS = {"design", "slug", "video", "card"}
 H1_SHRINK_FLOOR_RATIO = 0.75
 H1_SHRINK_STEP_PX = 4
 
+# Video timing (see VIDEO LOOP in the module docstring). Both templates finish
+# their reveal by about 6.5s, so a 10.5s cycle ends with roughly 4s of the
+# completed card held still. Two loops give about 21s with a restart in the
+# middle, which keeps motion in the feed instead of a long frozen tail.
+VIDEO_CYCLE_SECONDS = 10.5
+VIDEO_LOOPS = 2
+
 
 def logo_url(kind: str) -> str:
     name = "phr_logo_white.png" if kind == "white" else "phr_logo.png"
@@ -128,8 +150,8 @@ def fonts_css() -> str:
         ("DejaVu Sans Mono", "DejaVuSansMono-Bold.ttf", "700", "normal"),
     ]
     return "\n".join(
-        f"@font-face{{font-family:'{fam}';src:url('{u(f)}');"
-        f"font-weight:{w};font-style:{s};font-display:block}}"
+        f"@font-face{{{{font-family:'{fam}';src:url('{u(f)}');"
+        f"font-weight:{w};font-style:{s};font-display:block}}}}"
         for fam, f, w, s in faces
     )
 
@@ -159,8 +181,11 @@ def expand_design_spec(cfg: dict) -> dict:
     vdata["palette"] = pal
     vhtml = inject_fonts(inject_data(inject_logos((TEMPLATES / dc["video"]).read_text()), vdata))
     vconf = cfg.get("video") if isinstance(cfg.get("video"), dict) else {}
+    cycle = vconf.get("cycle", VIDEO_CYCLE_SECONDS)
+    loops = vconf.get("loops", VIDEO_LOOPS)
     out["video"] = {"html": vhtml, "width": 1080, "height": 1920,
-                    "fps": vconf.get("fps", 25), "duration": vconf.get("duration", 7.6)}
+                    "fps": vconf.get("fps", 25), "cycle": cycle, "loops": loops,
+                    "duration": vconf.get("duration", round(cycle * loops, 3))}
     return out
 
 
@@ -269,7 +294,12 @@ def render_card(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
 def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
     fps = cfg.get("fps", 25)
     duration = cfg.get("duration", 24.0)
+    # Length of one animation pass. Frames past it repeat the cycle rather than
+    # holding a frozen final frame. A spec with no "cycle" gets cycle ==
+    # duration, i.e. exactly the old single-pass behaviour.
+    cycle = cfg.get("cycle") or duration
     n_frames = int(fps * duration)
+    n_cycle = max(1, min(n_frames, int(fps * cycle)))
     page.set_viewport_size({"width": cfg["width"], "height": cfg["height"]})
     page.goto(f"file://{spec_dir / cfg['file']}")
     page.wait_for_load_state("networkidle")
@@ -281,8 +311,18 @@ def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
         )
     with tempfile.TemporaryDirectory() as td:
         for i in range(n_frames):
-            page.evaluate(f"seek({i / fps})")
-            page.screenshot(path=f"{td}/f{i:05d}.png")
+            path = f"{td}/f{i:05d}.png"
+            if i < n_cycle:
+                page.evaluate(f"seek({i / fps})")
+                page.screenshot(path=path)
+            else:
+                # Reuse an already-captured frame from the first cycle instead
+                # of re-rendering it. Hard link where possible, copy otherwise.
+                src = f"{td}/f{i % n_cycle:05d}.png"
+                try:
+                    os.link(src, path)
+                except OSError:
+                    shutil.copyfile(src, path)
         subprocess.run(
             [
                 "ffmpeg", "-y", "-loglevel", "error",
@@ -296,7 +336,11 @@ def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
             ],
             check=True,
         )
-    print(f"rendered {out.name}")
+    if n_cycle < n_frames:
+        print(f"rendered {out.name} ({duration:.1f}s = {cycle:.1f}s cycle x "
+              f"{n_frames / n_cycle:.2g}, {n_cycle} unique frames)")
+    else:
+        print(f"rendered {out.name}")
 
 
 def collect_inline(cfg: dict, base: str, tmp: Path):
