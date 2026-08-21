@@ -1,0 +1,27 @@
+{
+  "slug": "2026-08-21-broward-school-zone-premium",
+  "design": "data_card",
+  "kicker": "Broward County · Schools & Value",
+  "headline": "Your school zone\nhas a hidden\n[[tuition bill.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Price the whole cost, not just the house.",
+  "sources": "BCPS enrollment workshop (ACS data), Step Up for Students, PrivateSchoolReview, 2026",
+  "stats": [
+    {
+      "n": "9% vs 25%",
+      "label": "Share of school-age kids in <b>private school</b>. Weston versus Plantation.",
+      "short": "The gap"
+    },
+    {
+      "n": "$14,857",
+      "label": "Average <b>Broward private school tuition</b>, per child, per year.",
+      "short": "Tuition"
+    },
+    {
+      "n": "$104,000",
+      "label": "What Florida's <b>universal voucher</b> now covers across a full K-12 run.",
+      "short": "Per child",
+      "accent": true
+    }
+  ]
+}
