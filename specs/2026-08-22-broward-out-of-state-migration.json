@@ -1,0 +1,14 @@
+{
+  "slug": "broward-out-of-state-migration",
+  "design": "data_card",
+  "kicker": "Broward County · Market Insights",
+  "headline": "New plates in the driveway.\n[[Up 6%]] year over year.\nBroward's buyers are changing.",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "The buyers competing for your listing don't all live here yet.",
+  "sources": "Source: Miami Realtors, Broward July 2026 report",
+  "stats": [
+    {"n": "6%", "label": "Out of state <b>driver's license exchanges</b> into Broward rose year over year in 2025.", "short": "More movers", "accent": true},
+    {"n": "33.9%", "label": "Broward home sales at <b>$1 million and up</b> climbed year over year in July.", "short": "Luxury surge"},
+    {"n": "$300K", "label": "Average <b>equity gained</b> by Miami-Fort Lauderdale homeowners over the last five years.", "short": "Built-in equity"}
+  ]
+}
