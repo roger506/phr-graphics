@@ -25,12 +25,17 @@ def moves(d):
     m = {}
     m["price_pct"] = "{:.1f}%".format(abs(p)) if p is not None else None
     m["vol_pct"] = "{:.0f}%".format(abs(v)) if v is not None else None
-    m["price_arrow"] = (UP if (p or 0) > 0 else DN) if p is not None else ""
-    m["vol_arrow"] = (UP if (v or 0) > 0 else DN) if v is not None else ""
-    m["price_cls"] = ("up" if (p or 0) > 0 else "dn") if p is not None else ""
-    m["vol_cls"] = ("up" if (v or 0) > 0 else "dn") if v is not None else ""
-    m["price_word"] = ("rose" if (p or 0) > 0 else "fell") if p is not None else "held"
-    m["vol_word"] = ("rose" if (v or 0) > 0 else "fell") if v is not None else "held"
+    # ZERO GETS NO ARROW. Added 2026-08-23: The Ridge on Nob Hill closed 6 sales
+    # against 6 and the card rendered "DN 0% yr/yr" under HOMES SOLD, a downward
+    # arrow on a figure that did not move. The arrows are an approved chart
+    # convention (section 11) but a direction glyph on a flat quantity is a false
+    # claim, and it is silent because the number beside it is correct.
+    m["price_arrow"] = ("" if p == 0 else (UP if p > 0 else DN)) if p is not None else ""
+    m["vol_arrow"] = ("" if v == 0 else (UP if v > 0 else DN)) if v is not None else ""
+    m["price_cls"] = ("flat" if p == 0 else ("up" if p > 0 else "dn")) if p is not None else ""
+    m["vol_cls"] = ("flat" if v == 0 else ("up" if v > 0 else "dn")) if v is not None else ""
+    m["price_word"] = ("held" if p == 0 else ("rose" if p > 0 else "fell")) if p is not None else "held"
+    m["vol_word"] = ("held" if v == 0 else ("rose" if v > 0 else "fell")) if v is not None else "held"
     m["price_yoy"] = ("{} {} year over year".format(m["price_arrow"], m["price_pct"])
                       if p is not None else "year over year change not available")
     # The headline only claims a divergence when the data actually diverges.
@@ -47,6 +52,33 @@ def moves(d):
             m["headline"] = "A market holding steady."
     else:
         m["headline"] = "{} in the last year.".format(d["community"])
+
+    # The sentence that follows the headline on the flyer used to be a hardcoded
+    # "Volume and price moving in opposite directions is a market where buyers
+    # are active and negotiating, not one that has stalled." That is only true
+    # when they actually diverge. Sierra Ranches (2026-08-14) had volume up 150%
+    # AND price up 5.0%, and the flyer asserted divergence in the same paragraph
+    # that reported both rising, contradicting itself in consecutive sentences.
+    # The headline directly above it was already conditional; this was not. Same
+    # class of bug as the hardcoded Riverstone literals in section 5: an
+    # interpretive sentence that reads fine on the community it was written for
+    # and is false on the next one.
+    if p is not None and v is not None:
+        if (v > 0) != (p > 0) and v != 0 and p != 0:
+            m["trend_line"] = ("Volume and price moving in opposite directions is a "
+                               "market where buyers are active and negotiating, not "
+                               "one that has stalled.")
+        elif v > 0 and p > 0:
+            m["trend_line"] = ("Volume and price rising together points to real "
+                               "demand rather than a single sale pulling the median "
+                               "around.")
+        elif v < 0 and p < 0:
+            m["trend_line"] = ("Volume and price easing together is a market taking "
+                               "its time rather than one repricing sharply.")
+        else:
+            m["trend_line"] = ""
+    else:
+        m["trend_line"] = ""
     return m
 
 def card_html(d, P=None, R=None, w=1080, h=1920, mode="vertical"):
@@ -148,7 +180,7 @@ GRADCSS
 .st .k{font-size:F15px;color:#8a94a6;letter-spacing:.1em;text-transform:uppercase;
   margin-top:F11px;font-weight:600;white-space:nowrap}
 .st .d{font-size:F18px;margin-top:F7px;white-space:nowrap}
-.dn{color:#e09443;font-weight:700}.up{color:#3fae63;font-weight:700}
+.dn{color:#e09443;font-weight:700}.up{color:#3fae63;font-weight:700}.flat{color:#9bb0bd;font-weight:700}
 table{width:100%;border-collapse:collapse}
 th{text-align:left;font-size:F15px;letter-spacing:.12em;text-transform:uppercase;
   color:#6d7789;font-weight:700;padding:F10px 0 F8px}
