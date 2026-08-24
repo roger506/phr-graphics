@@ -243,7 +243,7 @@ td.d{color:#8a94a6;font-size:F22px}
       <div class="k">Homes sold</div>
       <div class="d">{vol_move}</div></div>
     <div class="st" data-i="3"><div class="v tn" data-c="{dom}">0</div>
-      <div class="k">Avg days on mkt</div>
+      <div class="k">Median days</div>
       <div class="d" style="color:#8a94a6">{dom_label}</div></div>
   </div>
   {table}
