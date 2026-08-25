@@ -1,0 +1,77 @@
+{
+  "basename": "2026-08-24-parkwood-isle-davie-real-estate-market-update",
+  "generated": "2026-08-24",
+  "d": {
+    "as_of": "2026-08-24",
+    "closed_90d": 1,
+    "closed_12mo": 3,
+    "closed_prior_12mo": 3,
+    "median_price_90d": 680000,
+    "median_price_12mo": 655000,
+    "median_price_prior_12mo": 670000,
+    "yoy_price_pct": -2.2,
+    "yoy_volume_pct": 0.0,
+    "median_ppsf_12mo": 354.44,
+    "median_dom_12mo": 9,
+    "median_cdom_12mo": 9,
+    "list_to_close_12mo": 0.98,
+    "high_sale_12mo": "680000",
+    "low_sale_12mo": "650000",
+    "active_listings": 0,
+    "pending_listings": 0,
+    "months_supply": 0.0,
+    "confidence_90d": "LOW",
+    "confidence_12mo": "LOW",
+    "community": "Parkwood Isle",
+    "city": "Davie",
+    "product_type": "Single-family",
+    "dom_label": "cumulative to contract",
+    "dom_word": "cumulative days to go under contract",
+    "dom_qual": "cumulative",
+    "agent": "Roger Averbuj",
+    "brokerage": "Prestige Heritage Realty",
+    "site": "prestigeheritagerealty.com",
+    "phone": "(954) 663-8461",
+    "agent_title": "Real Estate Broker / Owner",
+    "page": null,
+    "blog_slug": "parkwood-isle-davie-real-estate-market-update",
+    "blog_url": "https://www.prestigeheritagerealty.com/blog/parkwood-isle-davie-real-estate-market-update",
+    "cta_url": "https://www.prestigeheritagerealty.com/blog/parkwood-isle-davie-real-estate-market-update",
+    "built": "1989",
+    "window_label": "last 12 months",
+    "as_of_long": "August 24, 2026",
+    "as_of_month": "August 2026",
+    "window_long": "the twelve months ending August 24, 2026",
+    "cadence": "Refreshed every 90 days",
+    "photo_focus": "center 64%",
+    "photo_url": "https://cdn.lofty.com/image/fs/370329365657151/website/6897/cmsbuild/2026824_ea03178ec3834bc3.jpeg",
+    "logo_url": "https://cdn.chime.me/image/fs/sitebuild/2019101/16/w1200_original_3034a7ab-1025-460f-a755-a4354ed15ab9.png"
+  },
+  "P": {
+    "n_closed": 3,
+    "n_below_ask": 2
+  },
+  "R": [
+    {
+      "addr": "1541 SW 102nd Ter",
+      "bd": 4,
+      "sf": "2,026",
+      "price": "$680,000",
+      "date": "Jul 14"
+    },
+    {
+      "addr": "10090 SW 16th Place",
+      "bd": 3,
+      "sf": "1,802",
+      "price": "$650,000",
+      "date": "Apr 17"
+    },
+    {
+      "addr": "1710 SW 100th Ter",
+      "bd": 3,
+      "sf": "1,848",
+      "price": "$655,000",
+      "date": "Sep 8"
+    }
+  ]
+}
