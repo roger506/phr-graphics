@@ -10,10 +10,12 @@
   #head{font-size:126px;line-height:1.04;font-weight:700;opacity:0}
   #head .acc{color:var(--acc,#d8b45a)}
   #sub{font-style:italic;font-size:54px;color:var(--sub,#cbb98f);margin-top:36px;opacity:0}
-  #stats{display:flex;gap:80px;margin-top:60px;opacity:0}
-  .stat .n{font-size:118px;font-weight:700;color:var(--text,#fff);line-height:1}
-  .stat .l{font-family:"Liberation Sans",Arial,sans-serif;font-size:26px;letter-spacing:2px;
-    text-transform:uppercase;color:var(--kick,#c9a24b);margin-top:14px}
+  #stats{display:flex;gap:34px;margin-top:60px;opacity:0;width:100%;justify-content:center}
+  .stat{flex:1;max-width:300px;background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:32px 24px 28px}
+  .stat .n{font-size:100px;font-weight:700;color:var(--text,#fff);line-height:1}
+  .stat .l{font-family:"Liberation Sans",Arial,sans-serif;font-size:22px;line-height:1.28;
+    letter-spacing:.2px;color:var(--kick,#c9a24b);margin-top:16px}
   #take{font-style:italic;font-size:62px;color:var(--acc,#e7cf93);margin-top:70px;max-width:840px;line-height:1.18;opacity:0}
   #logo{height:156px;object-fit:contain;margin-top:60px;opacity:0}
   #tag{font-family:"Caladea","Liberation Serif",Georgia,serif;font-style:italic;font-size:34px;color:var(--acc,#e7cf93);margin-top:24px;opacity:0}
@@ -51,7 +53,7 @@ id("foot").textContent=plain(D.attribution||"");
 id("logo").src=P.logo||"../../assets/phr_logo_white.png";
 id("tag").textContent=D.tagline||"Straight answers. Deep roots.";
 id("stats").innerHTML=(D.stats||[]).slice(0,3).map(function(s){
-  return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+esc(s.short||"")+'</div></div>';}).join("");
+  return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+esc(s.label||s.short||"")+'</div></div>';}).join("");
 if(!D.sub)id("sub").style.display="none";
 var T=0;
 function cl(x,a,b){return Math.max(a,Math.min(b,x));}
