@@ -1,0 +1,14 @@
+{
+  "slug": "amendment-3-tax-ballot",
+  "design": "color_block",
+  "kicker": "Broward County · Property Taxes",
+  "headline": "Your November ballot\njust got rewritten.\n[[$250,000 by 2028.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "deck": "A judge called the old language a <b>political slogan</b>. The rewrite is final, and it changes what Broward homeowners should know before they vote.",
+  "takeaway": "The fine print matters more than the title.",
+  "stats": [
+    {"n": "$150K", "label": "homestead exemption starting 2027"},
+    {"n": "$250K", "label": "homestead exemption by 2028"},
+    {"n": "60%", "label": "voter approval required to pass"}
+  ]
+}
