@@ -16,9 +16,12 @@ Three spec formats are supported (all under specs/):
 3. DIR spec:
    specs/<name>/build.json with "card":{"file":...} / "video":{"file":...}.
 
-Videos always get a silent AAC audio track (TikTok rejects silent-video-only
-files). Inline/template HTML may reference the PHR logo; template specs use the
-tokens __LOGO_WHITE__ / __LOGO_DARK__ which are replaced with absolute paths.
+Videos get a light rotating background-music bed when the repo-root Music/
+folder holds tracks, and fall back to a silent AAC track when it is empty
+(TikTok rejects silent-video-only files, so the track always exists, just
+quiet). See the BACKGROUND MUSIC note below. Inline/template HTML may reference the PHR logo;
+template specs use the tokens __LOGO_WHITE__ / __LOGO_DARK__ which are replaced
+with absolute paths.
 Every spec is rendered in isolation and the job always exits 0, so one broken
 or placeholder spec never fails the whole run.
 
@@ -58,12 +61,15 @@ as og:image / twitter:image).
 It is deliberately NOT backfilled: the blog job is skipped whenever the day's
 main card PNG already exists, so pushing any new spec never re-renders history.
 """
+import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import date
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
@@ -74,6 +80,22 @@ ASSETS = ROOT / "assets"
 TEMPLATES = ROOT / "templates"
 FONTS = ASSETS / "fonts"
 DEBUG = ASSETS / "_debug"
+
+# BACKGROUND MUSIC (added 2026-08-26): videos get a light rotating music bed
+# instead of pure silence. Drop .mp3/.m4a/.wav files into the repo-root Music/
+# folder and the library rotates one track per day (strict daily rotation off the
+# spec's YYYY-MM-DD prefix, so consecutive days never repeat until the whole
+# library has cycled). The bed is mixed quiet and even -- normalised to
+# MUSIC_TARGET_LUFS with a short fade in and a longer fade out -- and the intro is
+# skipped so the clip lands on the groove, not the track's slow open. If Music/ is
+# empty or missing, render_video falls back to the original silent AAC track, so
+# the pipeline never depends on the library being present.
+MUSIC = ROOT / "Music"
+MUSIC_EXTS = {".mp3", ".m4a", ".wav", ".aac", ".ogg", ".flac"}
+MUSIC_TARGET_LUFS = -30.0   # integrated loudness of the bed (light background)
+MUSIC_INTRO_SKIP = 30.0     # seconds skipped at the head of each track
+MUSIC_FADE_IN = 0.6         # seconds
+MUSIC_FADE_OUT = 1.2        # seconds
 
 # design -> card template, video family template, and the video palette.
 # The card templates carry their own fixed palette; the shared video template
@@ -305,6 +327,90 @@ def render_card(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
         print(f"rendered {out.name}")
 
 
+def _music_tracks() -> list:
+    """Sorted list of usable audio files in the Music/ folder (empty if none)."""
+    if not MUSIC.is_dir():
+        return []
+    return sorted(
+        p for p in MUSIC.iterdir()
+        if p.is_file() and p.suffix.lower() in MUSIC_EXTS
+    )
+
+
+def _rotation_index(name: str, n: int) -> int:
+    """Pick a track slot for this spec.
+
+    Strict daily rotation off the YYYY-MM-DD prefix so consecutive days advance
+    by one track and never repeat until the library has fully cycled. Specs with
+    no parseable date fall back to a stable hash of the name.
+    """
+    m = re.match(r"(\d{4})-(\d{2})-(\d{2})", name)
+    if m:
+        try:
+            ordinal = date(int(m.group(1)), int(m.group(2)), int(m.group(3))).toordinal()
+            return ordinal % n
+        except ValueError:
+            pass
+    return int(hashlib.md5(name.encode()).hexdigest(), 16) % n
+
+
+def pick_music(name: str):
+    """Return the Path of the track to lay under `name`, or None if the library
+    is empty (which keeps the original silent-track behaviour)."""
+    tracks = _music_tracks()
+    if not tracks:
+        return None
+    return tracks[_rotation_index(name, len(tracks))]
+
+
+def _probe_duration(path: Path):
+    """Length of an audio/video file in seconds, or None if ffprobe can't tell."""
+    try:
+        out = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        return float(out)
+    except (subprocess.CalledProcessError, ValueError, OSError):
+        return None
+
+
+def _audio_input_args(name: str, duration: float):
+    """Build the ffmpeg audio-input + filter args for the music bed.
+
+    Returns (input_args, filter_complex, audio_map). When no music library is
+    present, returns the original silent-track wiring so callers stay identical.
+    """
+    track = pick_music(name)
+    if track is None:
+        # Original behaviour: a silent stereo AAC track (feeds reject
+        # silent-video-only files, so the track must exist, just quiet).
+        return (["-f", "lavfi", "-i",
+                 "anullsrc=channel_layout=stereo:sample_rate=44100"],
+                None, None)
+
+    dur = _probe_duration(track)
+    if dur and dur >= duration:
+        # Skip the intro, but never seek so far that fewer than `duration`
+        # seconds remain (that would let -shortest truncate the video).
+        offset = min(MUSIC_INTRO_SKIP, max(0.0, dur - duration - 0.2))
+        loop = []
+    else:
+        # Track shorter than the clip (or unprobeable): start at 0 and loop so
+        # the bed always fills the whole video.
+        offset = 0.0
+        loop = ["-stream_loop", "-1"]
+
+    out_st = max(0.0, duration - MUSIC_FADE_OUT)
+    afilter = (
+        f"[1:a]afade=t=in:st=0:d={MUSIC_FADE_IN},"
+        f"afade=t=out:st={out_st:.3f}:d={MUSIC_FADE_OUT},"
+        f"loudnorm=I={MUSIC_TARGET_LUFS}:TP=-1.5:LRA=11[a]"
+    )
+    return (loop + ["-ss", f"{offset:.3f}", "-i", str(track)], afilter, "[a]")
+
+
 def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
     fps = cfg.get("fps", 25)
     duration = cfg.get("duration", 24.0)
@@ -337,19 +443,21 @@ def render_video(page, spec_dir: Path, name: str, cfg: dict, out: Path) -> None:
                     os.link(src, path)
                 except OSError:
                     shutil.copyfile(src, path)
-        subprocess.run(
-            [
-                "ffmpeg", "-y", "-loglevel", "error",
-                "-framerate", str(fps), "-i", f"{td}/f%05d.png",
-                "-f", "lavfi", "-i",
-                "anullsrc=channel_layout=stereo:sample_rate=44100",
-                "-shortest", "-c:v", "libx264", "-preset", "medium",
-                "-crf", "23", "-pix_fmt", "yuv420p",
-                "-c:a", "aac", "-b:a", "96k",
-                "-movflags", "+faststart", str(out),
-            ],
-            check=True,
-        )
+        audio_in, afilter, amap = _audio_input_args(name, duration)
+        cmd = [
+            "ffmpeg", "-y", "-loglevel", "error",
+            "-framerate", str(fps), "-i", f"{td}/f%05d.png",
+            *audio_in,
+        ]
+        if afilter is not None:
+            cmd += ["-filter_complex", afilter, "-map", "0:v", "-map", amap]
+        cmd += [
+            "-shortest", "-c:v", "libx264", "-preset", "medium",
+            "-crf", "23", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-b:a", "96k", "-ar", "44100",
+            "-movflags", "+faststart", str(out),
+        ]
+        subprocess.run(cmd, check=True)
     if n_cycle < n_frames:
         print(f"rendered {out.name} ({duration:.1f}s = {cycle:.1f}s cycle x "
               f"{n_frames / n_cycle:.2g}, {n_cycle} unique frames)")
