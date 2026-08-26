@@ -1,0 +1,15 @@
+{
+  "slug": "lighthouse-point-waterfront-resale",
+  "design": "minimal_luxury",
+  "kicker": "Lighthouse Point · Waterfront",
+  "headline": "Bought for $1.4M in 2020.\nSold for [[$6.2M]] this month.",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "meta": "Lighthouse Point · August 2026",
+  "deck": "A spec-built canal home just proved rebuild economics still work.",
+  "stats": [
+    {"n": "$1.4M", "short": "2020 buy"},
+    {"n": "$6.2M", "short": "2026 sale"},
+    {"n": "4.4x", "short": "6 years"}
+  ],
+  "video_second": "Right lot, right canal, and the nerve to build instead of wait."
+}
