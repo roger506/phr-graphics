@@ -51,9 +51,16 @@ id("take").textContent=D.takeaway||"";
 id("foot").textContent=D.attribution||"";
 id("logo").src=P.logo||"../../assets/phr_logo.png";
 id("tag").textContent=D.tagline||"Straight answers. Deep roots.";
-function parseNum(str){var m=String(str).match(/^([^\d]*)([\d,]+)([^\d]*)$/);
-  return m?{pre:m[1],val:parseInt(m[2].replace(/,/g,""),10),suf:m[3]}:{pre:"",val:0,suf:String(str)};}
-function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");}
+function parseNum(str){var m=String(str).match(/^([^\d]*)([\d,]*\.?\d+)([^\d]*)$/);
+  if(!m)return{pre:"",val:0,suf:String(str),dec:0};
+  var raw=m[2].replace(/,/g,"");
+  var dot=raw.indexOf(".");
+  var dec=dot===-1?0:(raw.length-dot-1);
+  return{pre:m[1],val:parseFloat(raw),suf:m[3],dec:dec};}
+function fmt(n,dec){var s=dec?n.toFixed(dec):Math.round(n).toString();
+  var parts=s.split(".");
+  parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,",");
+  return parts.join(".");}
 var CN=parseNum(st0.n||"0");
 var kickFull=D.kicker||"";
 var T=0;
@@ -67,7 +74,7 @@ window.seek=function(t){T=t;
   id("kick").style.borderRightColor=(Math.floor(T*2)%2?(P.kick||"#7c2b2b"):"transparent");
   for(var i=0;i<lnEls.length;i++)rev(lnEls[i],1.0+i*0.25,0.6,20);
   var cp=eo(cl((T-2.3)/1.4,0,1));
-  id("big").textContent=CN.pre+fmt(Math.round(CN.val*cp))+CN.suf;
+  id("big").textContent=CN.pre+fmt(CN.val*cp,CN.dec)+CN.suf;
   id("clab").style.opacity=eo(cl((T-2.4)/0.7,0,1));
   rev(id("second"),4.0,0.7);
   rev(id("take"),4.9,0.7,26);
