@@ -1,0 +1,27 @@
+{
+  "slug": "broward-condo-inspection-scorecard",
+  "design": "data_card",
+  "kicker": "Broward County · Condo Safety",
+  "headline": "Florida just graded\n2,535 condo buildings.\n[[Broward didn't turn in all its homework.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Ask for the inspection file before you write the offer.",
+  "sources": "Source: OPPAGA report via Newsweek, Aug 2026",
+  "stats": [
+    {
+      "n": "2,535",
+      "label": "<b>2,535 buildings</b> statewide were flagged for a deeper structural review.",
+      "short": "Buildings flagged"
+    },
+    {
+      "n": "54",
+      "label": "<b>54 buildings</b> were declared unsafe, and only 5 were evacuated.",
+      "short": "Declared unsafe",
+      "accent": true
+    },
+    {
+      "n": "23%",
+      "label": "Broward's own building officials <b>never reported</b> their 2025 numbers.",
+      "short": "Broward underreported"
+    }
+  ]
+}
