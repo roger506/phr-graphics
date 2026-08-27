@@ -41,6 +41,8 @@ const SAMPLE={kicker:"The Insurance Paradox",headline:"Rates fell.\nYour bill [[
 const D=window.DATA||SAMPLE, P=D.palette||{};
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function hl(s){return esc(s).replace(/\n/g,"<br>").replace(/\[\[(.+?)\]\]/g,'<span class="acc">$1</span>');}
+// stat labels allow inline <b> from source; unescape the bold tags after escaping.
+function rich(s){return esc(s).replace(/&lt;b&gt;/g,"<b>").replace(/&lt;\/b&gt;/g,"</b>");}
 function plain(s){return String(s==null?"":s).replace(/<\/?[^>]+>/g,"");}
 function id(x){return document.getElementById(x);}
 var rs=document.documentElement.style;
@@ -53,7 +55,7 @@ id("foot").textContent=plain(D.attribution||"");
 id("logo").src=P.logo||"../../assets/phr_logo_white.png";
 id("tag").textContent=D.tagline||"Straight answers. Deep roots.";
 id("stats").innerHTML=(D.stats||[]).slice(0,3).map(function(s){
-  return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+esc(s.label||s.short||"")+'</div></div>';}).join("");
+  return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+rich(s.label||s.short||"")+'</div></div>';}).join("");
 if(!D.sub)id("sub").style.display="none";
 var T=0;
 function cl(x,a,b){return Math.max(a,Math.min(b,x));}
