@@ -56,6 +56,11 @@ id("logo").src=P.logo||"../../assets/phr_logo_white.png";
 id("tag").textContent=D.tagline||"Straight answers. Deep roots.";
 id("stats").innerHTML=(D.stats||[]).slice(0,3).map(function(s){
   return '<div class="stat"><div class="n">'+esc(s.n)+'</div><div class="l">'+rich(s.label||s.short||"")+'</div></div>';}).join("");
+document.querySelectorAll(".stat .n").forEach(function(el){
+  var maxW=el.parentElement.clientWidth-48,size=100;
+  el.style.whiteSpace="nowrap";el.style.fontSize=size+"px";
+  while(el.scrollWidth>maxW&&size>40){size-=4;el.style.fontSize=size+"px";}
+});
 if(!D.sub)id("sub").style.display="none";
 var T=0;
 function cl(x,a,b){return Math.max(a,Math.min(b,x));}
