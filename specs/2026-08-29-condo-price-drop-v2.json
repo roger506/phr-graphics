@@ -1,0 +1,14 @@
+{
+  "slug": "broward-condo-price-drop",
+  "design": "data_card",
+  "kicker": "Broward County · Market Insights",
+  "headline": "Condos got\ncheaper.\n[[Houses didn't.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Same county. Same month. Opposite directions.",
+  "sources": "MIAMI REALTORS + RWorld, July 2026 Broward stats",
+  "stats": [
+    {"n": "-3.77%", "label": "Broward <b>condo</b> median price fell to $255,000, the first real pullback in years.", "short": "Condos down", "accent": true},
+    {"n": "+4.84%", "label": "Broward <b>single-family</b> median price climbed to $650,000 in the same month.", "short": "Houses up"},
+    {"n": "10 mo.", "label": "<b>Condo inventory</b> now sits at ten months of supply, more than double the 4.3 months for houses.", "short": "Condo supply"}
+  ]
+}
