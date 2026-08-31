@@ -1,0 +1,14 @@
+{
+  "slug": "miramar-cove-retail-leasing-signal",
+  "design": "data_card",
+  "kicker": "Miramar · New Development",
+  "headline": "The retail leasing just started\non Miramar's [[$1 billion]] mini city.",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "That is the signal this is really happening.",
+  "sources": "Source: Connect CRE, Aug. 2026",
+  "stats": [
+    {"n": "$1B", "label": "The <b>total build-out value</b> Stiles and Sunbeam are targeting for the finished project.", "short": "Buildout value"},
+    {"n": "2,874", "label": "<b>New residences</b> planned across the 125 acre site.", "short": "New homes"},
+    {"n": "400K", "label": "<b>Square feet of retail</b> Colliers just started leasing, the real signal here.", "short": "Sq ft retail", "accent": true}
+  ]
+}
