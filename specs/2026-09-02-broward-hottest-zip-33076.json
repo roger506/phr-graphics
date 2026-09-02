@@ -1,0 +1,14 @@
+{
+  "slug": "broward-hottest-zip-33076",
+  "design": "data_card",
+  "kicker": "Broward County · Neighborhood Guides",
+  "headline": "Filed under Pompano Beach.\nBuilt like [[Parkland money.]]\nTop 5 in Florida.",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "The address on the mail is not the neighborhood behind the gates.",
+  "sources": "Realtor.com, 2026 Hottest ZIP Codes report",
+  "stats": [
+    {"n": "Top 5", "label": "<b>Only South Florida zip</b> on Realtor.com's 2026 hottest list.", "short": "Top 5", "accent": true},
+    {"n": "$745K", "label": "<b>Median home value</b>, more than double the U.S. average.", "short": "Home value"},
+    {"n": "$174K", "label": "<b>Median household income</b>, more than double the U.S. average.", "short": "Income"}
+  ]
+}
