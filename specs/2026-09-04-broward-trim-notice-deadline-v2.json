@@ -1,0 +1,14 @@
+{
+  "slug": "broward-trim-notice-deadline-v2",
+  "design": "color_block",
+  "kicker": "Broward County · Property Taxes",
+  "headline": "14 days.\nThat's how long you have\n[[to challenge your tax bill.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "deck": "Every Broward property owner got a TRIM notice in August. <b>The petition deadline is September 18.</b>",
+  "takeaway": "Filing costs nothing. Skipping it costs you for a year.",
+  "stats": [
+    {"n": "Sept 18", "label": "VAB petition deadline · 2026"},
+    {"n": "5.6658", "label": "new countywide millage rate · first cut since 2018"},
+    {"n": "$0", "label": "cost to file your own petition"}
+  ]
+}
