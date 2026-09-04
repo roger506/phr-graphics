@@ -1,0 +1,14 @@
+{
+  "slug": "broward-trim-notice-deadline-v3",
+  "design": "data_card",
+  "kicker": "Broward County · Property Taxes",
+  "headline": "14 days.\nThat's how long you have\n[[to challenge your tax bill.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Filing costs nothing. Skipping it costs you for a year.",
+  "sources": "Broward County Value Adjustment Board",
+  "stats": [
+    {"n": "Sept 18", "label": "The <b>Value Adjustment Board petition deadline</b> for 2026.", "short": "deadline", "accent": true},
+    {"n": "5.6658", "label": "Broward's new <b>countywide millage rate</b>, the first cut since 2018.", "short": "millage"},
+    {"n": "$0", "label": "What it <b>costs to file</b> your own petition.", "short": "to file"}
+  ]
+}
