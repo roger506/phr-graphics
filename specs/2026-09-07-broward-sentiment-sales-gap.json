@@ -1,0 +1,29 @@
+{
+  "slug": "broward-sentiment-sales-gap",
+  "design": "data_card",
+  "kicker": "Broward County · Market Insights",
+  "headline": "Florida's mood just fell\nfor the sixth month straight.\n[[Broward's sales didn't.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Feelings and closings don't move on the same schedule.",
+  "sources": "Sources: Florida Realtors / UF BEBR, MIAMI REALTORS + RWorld",
+  "stats": [
+    {
+      "n": "67.4",
+      "label": "Florida's <b>consumer confidence index</b> just posted its sixth straight monthly decline.",
+      "short": "Confidence down",
+      "accent": false
+    },
+    {
+      "n": "+8%",
+      "label": "Broward's <b>single family home sales</b> rose year over year for a fifth straight month in July.",
+      "short": "Sales up",
+      "accent": false
+    },
+    {
+      "n": "+33.9%",
+      "label": "Broward's <b>$1 million and up sales</b> climbed year over year, the strongest tier in the county.",
+      "short": "Luxury surging",
+      "accent": true
+    }
+  ]
+}
