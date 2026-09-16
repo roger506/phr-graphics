@@ -1,0 +1,14 @@
+{
+  "slug": "broward-cash-buyer-advantage",
+  "design": "data_card",
+  "kicker": "Broward County · Buying and Selling",
+  "headline": "Half of buyers over 70\naren't getting a mortgage.\n[[They're writing a check.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "If you're financing in Broward, you're often bidding against a neighbor who isn't.",
+  "sources": "NAR / Florida Realtors, Sept. 9, 2026",
+  "stats": [
+    {"n": "46%", "label": "<b>46% of buyers age 71 to 79</b> paid cash for their last home.", "short": "71 to 79", "accent": true},
+    {"n": "39%", "label": "<b>39% of buyers 61 to 70</b> did the same.", "short": "61 to 70"},
+    {"n": "3%", "label": "Only <b>3% of younger millennials</b> paid cash.", "short": "Millennials"}
+  ]
+}
