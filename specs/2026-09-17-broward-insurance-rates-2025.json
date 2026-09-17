@@ -1,0 +1,14 @@
+{
+  "slug": "broward-insurance-rates-2025",
+  "design": "data_card",
+  "kicker": "Broward County · Insurance",
+  "headline": "Florida insurers just\nreturned [[$211 million]]\nto homeowners",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "The market cooled. Not every bill did.",
+  "sources": "Source: Florida Realtors / APCIA, 2025 data",
+  "stats": [
+    {"n": "$1.29B", "label": "<b>Florida homeowners</b> paid $1.29 billion less in premiums in 2025 than in 2024.", "short": "Paid Less", "accent": true},
+    {"n": "Under 1%", "label": "The average homeowners rate increase fell to <b>under 1 percent</b> in 2025, down from 9.6 percent in 2023.", "short": "Rate Rise"},
+    {"n": "3%", "label": "<b>Citizens</b>, the state's insurer of last resort, now holds just 3 percent of the market, down from 15 percent.", "short": "Citizens Share"}
+  ]
+}
