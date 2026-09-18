@@ -1,0 +1,27 @@
+{
+  "slug": "broward-fed-rate-hike",
+  "design": "data_card",
+  "kicker": "Broward County · Mortgages",
+  "headline": "The rate cut everyone\nwas waiting for just\n[[became a hike]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Plan around the rate you have, not the one you're hoping for.",
+  "sources": "Source: Local10/WPLG, CNBC, NPR · Sept 16, 2026",
+  "stats": [
+    {
+      "n": "0.25%",
+      "label": "The Fed's <b>first rate hike in three years</b>, announced September 16, 2026.",
+      "short": "First hike, 3 yrs"
+    },
+    {
+      "n": "7.07%",
+      "label": "The <b>average South Florida mortgage rate</b> right now, with lenders expecting 7 percent or higher by year end.",
+      "short": "7.07% avg rate",
+      "accent": true
+    },
+    {
+      "n": "1 more",
+      "label": "The Fed's own forecast pencils in <b>one more hike</b> this year, and none in 2027.",
+      "short": "1 more hike ahead"
+    }
+  ]
+}
