@@ -1,0 +1,27 @@
+{
+  "slug": "broward-two-speed-housing-market",
+  "design": "data_card",
+  "kicker": "Broward County · Market Insights",
+  "headline": "$1M+ sales up 22.6%.\nTotal sales down 4.5%.\n[[Same county. Same month.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "One market is accelerating. The other is cooling. Price for the one you're actually in.",
+  "sources": "MIAMI REALTORS + RWorld, August 2026 county data",
+  "stats": [
+    {
+      "n": "+22.6%",
+      "label": "<b>$1M+ home sales</b> in Broward climbed year over year in August, 255 closings versus 208.",
+      "short": "Luxury",
+      "accent": true
+    },
+    {
+      "n": "-4.5%",
+      "label": "<b>Total home sales</b> fell across every price point, down to 1,899 closings countywide.",
+      "short": "Overall"
+    },
+    {
+      "n": "-9.3%",
+      "label": "<b>Condo sales</b> dropped the hardest of any segment tracked, while single family barely moved.",
+      "short": "Condos"
+    }
+  ]
+}
