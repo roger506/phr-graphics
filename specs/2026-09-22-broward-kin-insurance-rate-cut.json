@@ -1,0 +1,27 @@
+{
+  "slug": "broward-kin-insurance-rate-cut",
+  "design": "data_card",
+  "kicker": "Broward County · Home Insurance",
+  "headline": "Broward insurance rates\njust dropped more than\n[[20 percent]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "takeaway": "Check your renewal. The market that set your price is gone.",
+  "sources": "Source: Kin Insurance, Sept. 2026",
+  "stats": [
+    {
+      "n": "20%",
+      "label": "Kin Insurance is cutting rates more than <b>20 percent</b> for new and existing Broward, Miami-Dade, and Palm Beach homeowners.",
+      "short": "Rate Cut",
+      "accent": true
+    },
+    {
+      "n": "2.0%",
+      "label": "The share of homeowner claims turning into lawsuits against insurers here fell from 24.1 percent to <b>2.0 percent</b> since 2022.",
+      "short": "Lawsuits"
+    },
+    {
+      "n": "$14M",
+      "label": "Kin also raised its maximum insurable home value to <b>$14 million</b> and added four new discount programs.",
+      "short": "New Ceiling"
+    }
+  ]
+}
