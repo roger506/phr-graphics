@@ -1,0 +1,15 @@
+{
+  "slug": "broward-million-dollar-sales-surge",
+  "design": "minimal_luxury",
+  "kicker": "Broward County · Luxury Market",
+  "headline": "The market cooled.\nBroward's $1M+ homes\n[[sold 23% more.]]",
+  "attribution": "Roger Averbuj, Broker | Prestige Heritage Realty | (954) 663-8461",
+  "meta": "Broward County · August 2026",
+  "deck": "While total sales slipped and condos cooled, the million dollar segment had its strongest August in years.",
+  "stats": [
+    {"n": "255", "short": "$1M+ sales"},
+    {"n": "-4.5%", "short": "total sales"},
+    {"n": "-9.3%", "short": "condo sales"}
+  ],
+  "video_second": "The headline says cooling. The top of the market says otherwise."
+}
