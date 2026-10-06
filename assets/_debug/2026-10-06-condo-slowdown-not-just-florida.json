@@ -1,0 +1,50 @@
+{
+  "slug": "2026-10-06-condo-slowdown-not-just-florida",
+  "output": "2026-10-06-condo-slowdown-not-just-florida.png",
+  "canvas_height": 1350,
+  "footer_bottom_no_shrink": 1625.6,
+  "overflow_px_no_shrink": 275.6,
+  "h1_font_size_original": 112,
+  "h1_font_size_at_floor": 84,
+  "footer_bottom_at_floor": 1457.6,
+  "overflow_px_at_floor": 107.6,
+  "h1_text": "Everyone blamed Florida\nfor the condo slowdown.\nIt's happening everywhere.",
+  "shrink_attempts": [
+    {
+      "h1_font_size": 108,
+      "footer_bottom": 1601.6,
+      "overflow_px": 251.6
+    },
+    {
+      "h1_font_size": 104,
+      "footer_bottom": 1577.6,
+      "overflow_px": 227.6
+    },
+    {
+      "h1_font_size": 100,
+      "footer_bottom": 1553.6,
+      "overflow_px": 203.6
+    },
+    {
+      "h1_font_size": 96,
+      "footer_bottom": 1529.6,
+      "overflow_px": 179.6
+    },
+    {
+      "h1_font_size": 92,
+      "footer_bottom": 1505.6,
+      "overflow_px": 155.6
+    },
+    {
+      "h1_font_size": 88,
+      "footer_bottom": 1481.6,
+      "overflow_px": 131.6
+    },
+    {
+      "h1_font_size": 84,
+      "footer_bottom": 1457.6,
+      "overflow_px": 107.6
+    }
+  ],
+  "note": "Auto-shrink alone could not fit this card's content within the canvas. Shorten the headline (or whichever field is tall) and recommit the spec under a new slug; see FUTURE.md / the Memory Ledger CONFIG UPDATE (2026-08-18) for the standing process."
+}
