@@ -1,0 +1,94 @@
+{
+  "basename": "2026-11-04-riverstone-davie-real-estate-market-update",
+  "generated": "2026-11-05",
+  "d": {
+    "as_of": "2026-11-04",
+    "closed_90d": 3,
+    "closed_12mo": 11,
+    "closed_prior_12mo": 15,
+    "median_price_90d": 1700000.0,
+    "median_price_12mo": 1810000.0,
+    "median_price_prior_12mo": 1970000.0,
+    "yoy_price_pct": -8.1,
+    "yoy_volume_pct": -26.7,
+    "median_ppsf_12mo": 454.95,
+    "median_dom_12mo": 65,
+    "median_cdom_12mo": 65,
+    "list_to_close_12mo": 0.94,
+    "high_sale_12mo": 2050000.0,
+    "low_sale_12mo": 1650000.0,
+    "active_listings": 4,
+    "pending_listings": 2,
+    "months_supply": 4.4,
+    "confidence_90d": "LOW",
+    "confidence_12mo": "LOW",
+    "community": "Riverstone",
+    "city": "Davie",
+    "product_type": "Single-family",
+    "dom_label": "cumulative to contract",
+    "dom_word": "cumulative days to go under contract",
+    "dom_qual": "cumulative",
+    "agent": "Roger Averbuj",
+    "brokerage": "Prestige Heritage Realty",
+    "site": "prestigeheritagerealty.com",
+    "phone": "(954) 663-8461",
+    "agent_title": "Real Estate Broker / Owner",
+    "page": "https://www.prestigeheritagerealty.com/riverstone-market-activity",
+    "blog_slug": "riverstone-davie-real-estate-market-update",
+    "blog_url": "https://www.prestigeheritagerealty.com/blog/riverstone-davie-real-estate-market-update",
+    "cta_url": "https://www.prestigeheritagerealty.com/blog/riverstone-davie-real-estate-market-update",
+    "built": "2003-2005",
+    "window_label": "last 12 months",
+    "as_of_long": "November 4, 2026",
+    "as_of_month": "November 2026",
+    "window_long": "the twelve months ending November 4, 2026",
+    "cadence": "Refreshed every 90 days",
+    "photo_focus": "center 64%",
+    "photo_url": "https://cdn.chime.me/image/fs/cmsbuild/2024427/15/w1200_original_a2e2ade7-86a8-4dbc-a793-a964ce05176b.jpeg",
+    "logo_url": "https://cdn.chime.me/image/fs/sitebuild/2019101/16/w1200_original_3034a7ab-1025-460f-a755-a4354ed15ab9.png"
+  },
+  "P": {
+    "n_closed": 11,
+    "n_below_ask": 10,
+    "median_reduction": 234500.0,
+    "active_ppsf": 473.224716617726,
+    "n_active": 4
+  },
+  "R": [
+    {
+      "addr": "15171 SW 35th St",
+      "bd": 5,
+      "sf": "4,225",
+      "price": "$1,700,000",
+      "date": "Oct 30"
+    },
+    {
+      "addr": "15374 SW 34th St",
+      "bd": 5,
+      "sf": "3,728",
+      "price": "$1,750,000",
+      "date": "Sep 29"
+    },
+    {
+      "addr": "15273 SW 37th Street",
+      "bd": 5,
+      "sf": "3,648",
+      "price": "$1,665,000",
+      "date": "Sep 25"
+    },
+    {
+      "addr": "14831 SW 38th Street",
+      "bd": 4,
+      "sf": "4,225",
+      "price": "$1,810,000",
+      "date": "Aug 5"
+    },
+    {
+      "addr": "15127 SW 40th St",
+      "bd": 6,
+      "sf": "4,395",
+      "price": "$1,830,000",
+      "date": "Jul 10"
+    }
+  ]
+}
