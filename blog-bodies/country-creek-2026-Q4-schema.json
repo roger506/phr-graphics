@@ -1,0 +1,22 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are homes selling for in Country Creek, Davie?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Over the twelve months ending November 11, 2026, 7 homes closed at a median price of $508,000."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long do homes take to sell in Country Creek?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The median cumulative days to go under contract was 30 days over the twelve months ending November 11, 2026."
+      }
+    }
+  ]
+}
