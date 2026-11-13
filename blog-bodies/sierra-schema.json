@@ -1,0 +1,22 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are homes selling for in Sierra Ranches, Davie?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Over the twelve months ending November 12, 2026, 6 homes closed at a median price of $2,047,500."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long do homes take to sell in Sierra Ranches?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The median cumulative days to go under contract was 97 days over the twelve months ending November 12, 2026."
+      }
+    }
+  ]
+}
